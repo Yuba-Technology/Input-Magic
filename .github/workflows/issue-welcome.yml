@@ -1,0 +1,22 @@
+name: Welcome new contributors
+on:
+  issues:
+    types:
+      - opened
+
+env:
+  FORCE_COLOR: 2
+  NODE: 20
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create comment
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: "welcome"
+          token: ${{ secrets.BG_TOKEN }}
+          body: |
+            Hi @${{ github.event.issue.user.login }}! 👋
+            Thanks for opening this issue. We will get back to you soon.
