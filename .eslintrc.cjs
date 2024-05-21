@@ -95,7 +95,14 @@ module.exports = {
         "unicorn/prefer-query-selector": "off",
         "unicorn/prefer-spread": "off",
         "unicorn/prefer-string-replace-all": "off",
-        "unicorn/prevent-abbreviations": "off"
+        "unicorn/prevent-abbreviations": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+                argsIgnorePattern: "^_",
+                varsIgnorePattern: "^_"
+            }
+        ]
     },
     overrides: [
         {
@@ -132,7 +139,8 @@ module.exports = {
                 "no-console": "off",
                 "unicorn/consistent-function-scoping": "off",
                 "unicorn/no-useless-undefined": "off",
-                "unicorn/prefer-add-event-listener": "off"
+                "unicorn/prefer-add-event-listener": "off",
+                "@typescript-eslint/no-var-requires": "off"
             }
         },
         {
