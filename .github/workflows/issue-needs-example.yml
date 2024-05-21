@@ -1,0 +1,25 @@
+name: Issue needs example
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+jobs:
+  issue-labeled:
+    permissions:
+      # allow actions-cool/issues-helper to update issues and PRs
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: awaiting reply
+        if: github.event.label.name == 'needs example'
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: "create-comment"
+          token: ${{ secrets.BG_TOKEN }}
+          body: |
+            Hello @${{ github.event.issue.user.login }}. Bug reports must include a **live demo** of the issue. You can visit our [CONTRIBUTING.md](https://github.com/Yuba-Technology/Input-Magic/blob/main/.github/CONTRIBUTING.md) for more information on how to create a live demo.
