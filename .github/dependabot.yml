@@ -13,7 +13,6 @@ updates:
       - "@yuba-technology/frontend-team"
     labels:
       - dependencies
-      - frontend
     schedule:
       interval: weekly
       day: friday
