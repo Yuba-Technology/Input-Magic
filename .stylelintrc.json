@@ -1,0 +1,40 @@
+{
+    "extends": ["stylelint-config-standard-scss"],
+    "reportInvalidScopeDisables": true,
+    "reportNeedlessDisables": true,
+    "overrides": [
+        {
+            "files": ["**/*.scss"],
+            "rules": {
+                "scss/dollar-variable-default": [
+                    true,
+                    {
+                        "ignore": "local"
+                    }
+                ],
+                "scss/selector-no-union-class-name": true,
+                "scss/dollar-variable-empty-line-before": [
+                    "always",
+                    {
+                        "except": ["first-nested", "after-dollar-variable"],
+                        "ignore": ["after-comment", "after-dollar-variable"]
+                    }
+                ],
+                "at-rule-empty-line-before": [
+                    "always",
+                    {
+                        "except": [
+                            "blockless-after-same-name-blockless",
+                            "first-nested"
+                        ],
+                        "ignore": [
+                            "blockless-after-same-name-blockless",
+                            "inside-block"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "plugins": ["stylelint-scss"]
+}
