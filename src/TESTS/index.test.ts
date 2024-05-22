@@ -6,7 +6,7 @@ it("should render a heading", () => {
     const dom = new JSDOM("<!DOCTYPE html><body></body>");
     global.document = dom.window.document;
 
-    const _ = require("@/index.ts");
+    const _ = require("@/index");
 
     expect(document.body.innerHTML).toBe("<h1>Hello World</h1>");
 });
