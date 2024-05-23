@@ -4,19 +4,19 @@
 
 import { Block, BlockPos } from "@/map/block";
 import { Chunk } from "@/map/chunk";
-import { MapGenerator } from "@/map/generator/3d";
+import { Generator3D } from "@/map/generator/3d";
 import { traverseBlockArray } from "@/map/utils";
 
 describe("MapGenerator", () => {
-    let mapGenerator: MapGenerator;
+    let generator3D: Generator3D;
 
     beforeEach(() => {
-        mapGenerator = new MapGenerator("testSeed");
+        generator3D = new Generator3D("testSeed");
     });
 
     it("should generate a block with correct position and type", () => {
         const pos = { x: 1, y: 2, z: 3 };
-        const block = mapGenerator.generateBlock(pos);
+        const block = generator3D.generateBlock(pos);
 
         expect(block).toBeInstanceOf(Block);
         expect(block.pos).toEqual(pos);
@@ -25,7 +25,7 @@ describe("MapGenerator", () => {
 
     it("should generate a chunk with correct position and blocks", () => {
         const pos = { x: 1, y: 2 };
-        const chunk = mapGenerator.generateChunk(pos);
+        const chunk = generator3D.generateChunk(pos);
 
         expect(chunk).toBeInstanceOf(Chunk);
         expect(chunk.pos).toEqual(pos);

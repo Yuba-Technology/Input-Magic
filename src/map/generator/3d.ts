@@ -6,7 +6,7 @@ import { generateBlockArray } from "@/map/utils";
  * A 3D map generator.
  * @class
  */
-class MapGenerator {
+class Generator3D {
     seed: string;
 
     /**
@@ -49,4 +49,4 @@ class MapGenerator {
     }
 }
 
-export { MapGenerator };
+export { Generator3D };
