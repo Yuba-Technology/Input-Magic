@@ -1,22 +1,23 @@
 import { Chunk } from "@/chunk/chunk";
 
-type DimensionPos = {
-    id: number;
+type DimensionConfig = {
+    id: string;
+    chunks?: Chunk[];
 };
 
 interface DimensionInterface {
-    pos: DimensionPos;
+    id: string;
     chunks: Chunk[];
 }
 
 class Dimension implements DimensionInterface {
-    pos: DimensionPos;
+    id: string;
     chunks: Chunk[];
 
-    constructor(pos: DimensionPos) {
-        this.pos = pos;
-        this.chunks = [];
+    constructor(config: DimensionConfig) {
+        this.id = config.id;
+        this.chunks = config.chunks || [];
     }
 }
 
-export { Dimension, DimensionInterface, DimensionPos };
+export { Dimension, DimensionInterface, DimensionConfig };
