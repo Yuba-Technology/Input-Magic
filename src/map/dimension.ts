@@ -1,5 +1,6 @@
 import { BlockPos } from "@/map/block";
 import { Chunk, ChunkPos } from "@/map/chunk";
+import { Generator3D } from "@/map/generator/3d";
 
 /**
  * The configuration for a dimension in the world.
@@ -10,6 +11,7 @@ import { Chunk, ChunkPos } from "@/map/chunk";
 type DimensionConfig = {
     id: string;
     chunks?: { [key: string]: Chunk }; // The chunks in the dimension. Key is the chunk position in the format "x,y".
+    generator: Generator3D;
 };
 
 /**
@@ -44,6 +46,7 @@ interface DimensionInterface {
 class Dimension implements DimensionInterface {
     id: string; // The ID of the dimension.
     chunks: { [key: string]: Chunk }; // The chunks in the dimension. Key is the chunk position in the format "x,y".
+    private generator: Generator3D;
 
     /**
      * @constructor
@@ -52,6 +55,7 @@ class Dimension implements DimensionInterface {
     constructor(config: DimensionConfig) {
         this.id = config.id;
         this.chunks = config.chunks || {};
+        this.generator = config.generator;
     }
 
     /**
@@ -96,8 +100,7 @@ class Dimension implements DimensionInterface {
      * @returns Generated new chunk.
      */
     generateChunk(pos: ChunkPos): Chunk {
-        // TODO: Add generate blocks method.
-        const chunk = new Chunk({ pos, blocks: [[[]]] });
+        const chunk = this.generator.generateChunk(pos);
         this.chunks[`${pos.x},${pos.y}`] = chunk;
         return chunk;
     }
