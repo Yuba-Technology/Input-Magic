@@ -1,4 +1,4 @@
-import { Block } from "@/block/block";
+import { Block } from "@/map/block";
 import { Entity } from "@/entity/entity";
 
 /**

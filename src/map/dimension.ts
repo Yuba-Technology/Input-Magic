@@ -1,4 +1,4 @@
-import { Chunk } from "@/chunk/chunk";
+import { Chunk } from "@/map/chunk";
 
 /**
  * The configuration for a dimension in the world.
