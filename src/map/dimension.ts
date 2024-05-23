@@ -8,7 +8,7 @@ import { Chunk } from "@/map/chunk";
  */
 type DimensionConfig = {
     id: string;
-    chunks?: Chunk[];
+    chunks?: { [key: string]: Chunk }; // The chunks in the dimension. Key is the chunk position in the format "x,y".
 };
 
 /**
@@ -18,8 +18,8 @@ type DimensionConfig = {
  * @property {Chunk[]} chunks - The chunks in the dimension.
  */
 interface DimensionInterface {
-    id: string;
-    chunks: Chunk[];
+    id: string; // The ID of the dimension.
+    chunks: { [key: string]: Chunk }; // The chunks in the dimension. Key is the chunk position in the format "x,y".
 }
 
 /**
@@ -30,7 +30,7 @@ interface DimensionInterface {
  */
 class Dimension implements DimensionInterface {
     id: string; // The ID of the dimension.
-    chunks: Chunk[]; // The chunks in the dimension.
+    chunks: { [key: string]: Chunk }; // The chunks in the dimension. Key is the chunk position in the format "x,y".
 
     /**
      * @constructor
@@ -38,7 +38,7 @@ class Dimension implements DimensionInterface {
      */
     constructor(config: DimensionConfig) {
         this.id = config.id;
-        this.chunks = config.chunks || [];
+        this.chunks = config.chunks || {};
     }
 }
 
