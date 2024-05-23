@@ -18,8 +18,8 @@ type BlockPos = {
  * @property {string} type - The type of the block.
  */
 interface BlockInterface {
-    pos: BlockPos;
-    type: string;
+    pos: BlockPos; // The position of the block.
+    type: string; // The type of the block.
 }
 
 /**

@@ -1,6 +1,8 @@
 import { Block } from "@/map/block";
 import { Entity } from "@/entity/entity";
 
+const CHUNK_SIZE = 16;
+
 /**
  * The position of a chunk in the world.
  * @typedef {Object} ChunkPos
@@ -46,6 +48,7 @@ interface ChunkInterface {
  * @extends {ChunkConfig}
  */
 class Chunk implements ChunkInterface {
+    static CHUNK_SIZE = CHUNK_SIZE;
     pos: ChunkPos;
     blocks: Block[];
     entities: Entity[];
