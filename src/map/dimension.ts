@@ -5,7 +5,7 @@ import { Chunk, ChunkPos } from "@/map/chunk";
  * The configuration for a dimension in the world.
  * @typedef {Object} DimensionConfig
  * @property {string} id - The ID of the dimension.
- * @property {Chunk[]} [chunks] - The chunks in the dimension.
+ * @property {{ [key: string]: Chunk }} chunks - The chunks in the dimension.
  */
 type DimensionConfig = {
     id: string;
@@ -16,7 +16,7 @@ type DimensionConfig = {
  * The interface for a dimension in the world.
  * @interface DimensionInterface
  * @property {string} id - The ID of the dimension.
- * @property {Chunk[]} chunks - The chunks in the dimension.
+ * @property {{ [key: string]: Chunk }} chunks - The chunks in the dimension.
  */
 interface DimensionInterface {
     // The ID of the dimension.

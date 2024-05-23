@@ -19,8 +19,8 @@ type ChunkPos = {
  * The configuration for a chunk in the world.
  * @typedef {Object} ChunkConfig
  * @property {ChunkPos} pos - The position of the chunk.
- * @property {Block[][][]} [blocks] - The blocks in the chunk.
- * @property {Entity[]} [entities] - The entities in the chunk.
+ * @property {Block[][][]} blocks - The blocks in the chunk.
+ * @property {Entity[]} entities - The entities in the chunk.
  */
 type ChunkConfig = {
     pos: ChunkPos;
