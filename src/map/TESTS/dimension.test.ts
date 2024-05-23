@@ -11,7 +11,7 @@ describe("Dimension class", () => {
     beforeEach(() => {
         dimension = new Dimension({
             id: "test",
-            chunks: { "0,0": new Chunk({ pos: chunkPos }) }
+            chunks: { "0,0": new Chunk({ pos: chunkPos, blocks: [[[]]] }) }
         });
     });
 

@@ -97,7 +97,7 @@ class Dimension implements DimensionInterface {
      */
     generateChunk(pos: ChunkPos): Chunk {
         // TODO: Add generate blocks method.
-        const chunk = new Chunk({ pos });
+        const chunk = new Chunk({ pos, blocks: [[[]]] });
         this.chunks[`${pos.x},${pos.y}`] = chunk;
         return chunk;
     }

@@ -18,12 +18,12 @@ type ChunkPos = {
  * The configuration for a chunk in the world.
  * @typedef {Object} ChunkConfig
  * @property {ChunkPos} pos - The position of the chunk.
- * @property {Block[]} [blocks] - The blocks in the chunk.
+ * @property {Block[][][]} [blocks] - The blocks in the chunk.
  * @property {Entity[]} [entities] - The entities in the chunk.
  */
 type ChunkConfig = {
     pos: ChunkPos;
-    blocks?: Block[];
+    blocks: Block[][][];
     entities?: Entity[];
 };
 
@@ -31,13 +31,13 @@ type ChunkConfig = {
  * The interface for a chunk in the world.
  * @interface ChunkInterface
  * @property {ChunkPos} pos - The position of the chunk.
- * @property {Block[]} blocks - The blocks in the chunk.
+ * @property {Block[][][]} blocks - The blocks in the chunk.
  * @property {Entity[]} entities - The entities in the chunk.
  * @extends {ChunkConfig}
  */
 interface ChunkInterface {
     pos: ChunkPos;
-    blocks: Block[];
+    blocks: Block[][][];
     entities: Entity[];
 }
 
@@ -50,7 +50,7 @@ interface ChunkInterface {
 class Chunk implements ChunkInterface {
     static CHUNK_SIZE = CHUNK_SIZE;
     pos: ChunkPos;
-    blocks: Block[];
+    blocks: Block[][][];
     entities: Entity[];
 
     /**
@@ -59,7 +59,7 @@ class Chunk implements ChunkInterface {
      */
     constructor(config: ChunkConfig) {
         this.pos = config.pos;
-        this.blocks = config.blocks || [];
+        this.blocks = config.blocks;
         this.entities = config.entities || [];
     }
 }
