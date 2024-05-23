@@ -32,9 +32,8 @@ class Block implements BlockInterface {
 
     /**
      * @constructor
-     * @param {BlockPos} pos - The position of the block.
-     * @param {string} type - The type of the block.
-     * @returns {Block}
+     * @param pos - The position of the block.
+     * @param type - The type of the block.
      */
     constructor(pos: BlockPos, type: string) {
         this.pos = pos;
