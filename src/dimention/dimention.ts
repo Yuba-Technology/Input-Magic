@@ -1,22 +1,22 @@
 import { Chunk } from "@/chunk/chunk";
 
-type DimentionPos ={
-    id:number;
+type DimentionPos = {
+    id: number;
 };
 
-interface DimentionInterface{
+interface DimentionInterface {
     pos: DimentionPos;
     chunks: Chunk[];
-};
+}
 
-class Dimention implements DimentionInterface{
+class Dimention implements DimentionInterface {
     pos: DimentionPos;
-    chunks:Chunk[];
-    
-    constructor(pos:DimentionPos){
-        this.pos=pos;
-        this.chunks=[];
-    }
-};
+    chunks: Chunk[];
 
-export {Dimention , DimentionInterface,DimentionPos }
+    constructor(pos: DimentionPos) {
+        this.pos = pos;
+        this.chunks = [];
+    }
+}
+
+export { Dimention, DimentionInterface, DimentionPos };
