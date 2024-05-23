@@ -2,6 +2,7 @@ import { Block } from "@/map/block";
 import { Entity } from "@/entity/entity";
 
 const CHUNK_SIZE = 16;
+const CHUNK_HEIGHT = 16;
 
 /**
  * The position of a chunk in the world.
@@ -48,7 +49,8 @@ interface ChunkInterface {
  * @extends {ChunkConfig}
  */
 class Chunk implements ChunkInterface {
-    static CHUNK_SIZE = CHUNK_SIZE;
+    static SIZE = CHUNK_SIZE;
+    static HEIGHT = CHUNK_HEIGHT;
     pos: ChunkPos;
     blocks: Block[][][];
     entities: Entity[];

@@ -70,8 +70,8 @@ class Dimension implements DimensionInterface {
      */
     getChunkFromBlockPos(pos: BlockPos, generate = true): Chunk | null {
         const chunkPos = {
-            x: Math.floor(pos.x / Chunk.CHUNK_SIZE),
-            y: Math.floor(pos.z / Chunk.CHUNK_SIZE)
+            x: Math.floor(pos.x / Chunk.SIZE),
+            y: Math.floor(pos.z / Chunk.SIZE)
         };
         return this.getChunkFromChunkPos(chunkPos, generate);
     }

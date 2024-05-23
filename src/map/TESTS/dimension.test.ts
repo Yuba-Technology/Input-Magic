@@ -30,9 +30,9 @@ describe("Dimension class", () => {
 
         // Non-existing chunk
         const blockPosAtNewChunk: BlockPos = {
-            x: 0 + Chunk.CHUNK_SIZE,
-            y: 0 + Chunk.CHUNK_SIZE,
-            z: 0 + Chunk.CHUNK_SIZE
+            x: 0 + Chunk.SIZE,
+            y: 0 + Chunk.SIZE,
+            z: 0 + Chunk.SIZE
         };
 
         // Non-existing chunk, disallow generation
