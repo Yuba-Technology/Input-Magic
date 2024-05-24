@@ -23,4 +23,19 @@ describe("Chunk", () => {
     it("should be created with correct entities", () => {
         expect(chunk.entities).toEqual(mockConfig.entities);
     });
+
+    // Position conversion tests
+    it("should convert absolute position to relative position", () => {
+        const pos = { x: 3, y: 16, z: 3 };
+        const relativePos = chunk.absoluteToRelativePosition(pos);
+
+        expect(relativePos).toEqual({ x: 3, y: 0, z: 3 });
+    });
+
+    it("should convert relative position to absolute position", () => {
+        const relativePos = { x: 3, y: 0, z: 3 };
+        const pos = chunk.relativeToAbsolutePosition(relativePos);
+
+        expect(pos).toEqual({ x: 19, y: 16, z: 3 });
+    });
 });

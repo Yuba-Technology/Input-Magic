@@ -1,8 +1,21 @@
-import { Block } from "@/map/block";
+import { Block, BlockPos } from "@/map/block";
 import { Entity } from "@/entity/entity";
 
 const CHUNK_SIZE = 16;
 const CHUNK_HEIGHT = 16;
+
+/**
+ * Relative block position inside a chunk
+ * @typedef {Object} RelativeBlockPos
+ * @property {number} x - The relative x-coordinate of the block.
+ * @property {number} y - The relative y-coordinate of the block.
+ * @property {number} z - The relative z-coordinate of the block.
+ */
+type RelativeBlockPos = {
+    x: number;
+    y: number;
+    z: number;
+};
 
 /**
  * The position of a chunk in the world.
@@ -34,12 +47,16 @@ type ChunkConfig = {
  * @property {ChunkPos} pos - The position of the chunk.
  * @property {Block[][][]} blocks - The blocks in the chunk.
  * @property {Entity[]} entities - The entities in the chunk.
+ * @method absoluteToRelativePosition - Convert an absolute position to a relative position inside the chunk.
+ * @method relativeToAbsolutePosition - Convert a relative position inside the chunk to an absolute position.
  * @extends {ChunkConfig}
  */
 interface ChunkInterface {
     pos: ChunkPos;
     blocks: Block[][][];
     entities: Entity[];
+    absoluteToRelativePosition(pos: BlockPos): RelativeBlockPos;
+    relativeToAbsolutePosition(pos: RelativeBlockPos): BlockPos;
 }
 
 /**
@@ -63,6 +80,32 @@ class Chunk implements ChunkInterface {
         this.pos = config.pos;
         this.blocks = config.blocks;
         this.entities = config.entities || [];
+    }
+
+    /**
+     * Convert an absolute position to a relative position inside the chunk.
+     * @param pos The absolute position.
+     * @returns The relative position inside the chunk.
+     */
+    absoluteToRelativePosition(pos: BlockPos): RelativeBlockPos {
+        return {
+            x: pos.x % Chunk.SIZE,
+            y: pos.y % Chunk.SIZE,
+            z: pos.z // z is the same in both relative and absolute positions
+        };
+    }
+
+    /**
+     * Convert a relative position inside the chunk to an absolute position.
+     * @param pos The relative position inside the chunk.
+     * @returns The absolute position.
+     */
+    relativeToAbsolutePosition(pos: RelativeBlockPos): BlockPos {
+        return {
+            x: pos.x + this.pos.x * Chunk.SIZE,
+            y: pos.y + this.pos.y * Chunk.SIZE,
+            z: pos.z // z is the same in both relative and absolute positions
+        };
     }
 }
 
