@@ -1,21 +1,52 @@
 /**
+ * Traverses a 2D array and calls a callback function for each element.
+ * The order of traversal is y-axis first, and then x-axis.
+ * @param arr The 2D array to be traversed.
+ * @param callback The callback function to be called for each element.
+ * @returns {void}
+ * @example
+ * const arr = [
+ *     [element1, element2],
+ *     [element3, element4]
+ * ];
+ *
+ * traverse2DArray(arr, (element, relativePos) => console.log(element));
+ * // element1, element2, element3, element4.
+ */
+export function traverse2DArray<T>(
+    arr: T[][],
+    callback: (
+        element: T,
+        relativePos: { x: number; y: number } // The relative position of the element in the array.
+    ) => void
+) {
+    for (const [x, xLayer] of arr.entries()) {
+        for (const [y, element] of xLayer.entries()) {
+            callback(element, { x, y });
+        }
+    }
+}
+
+/**
  * Traverses a 3D array and calls a callback function for each element.
  * The order of traversal is z-axis first, then y-axis, and finally x-axis.
  * @param arr The 3D array to be traversed.
  * @param callback The callback function to be called for each element.
  * @returns {void}
  * @example
- * [
+ * const arr = [
  *     [
  *         [element1, element2],
  *         [element3, element4]
  *     ],
  *     [
- *        [element5, element6],
- *        [element7, element8]
+ *         [element5, element6],
+ *         [element7, element8]
  *     ]
- * ]
- * // The order of traversal is element1, element2, element3, element4, element5, element6, element7, element8.
+ * ];
+ *
+ * traverse3DArray(arr, (element, relativePos) => console.log(element));
+ * // element1, element2, element3, element4, element5, element6, element7, element8.
  */
 export function traverse3DArray<T>(
     arr: T[][][],
@@ -34,35 +65,62 @@ export function traverse3DArray<T>(
 }
 
 /**
+ * Generates a 2D array with the given size and calls a generator function for each element.
+ * @param size The size of the 2D array.
+ * @param callback The generator function to be called for each element.
+ * @returns {T[][]} The 2D array.
+ * @example
+ * generate2DArray({ x: 2, y: 2 }, (pos) => pos);
+ * // The generated 2D array:
+ * // [
+ * //     [
+ * //         { x: 0, y: 0 },
+ * //         { x: 0, y: 1 }
+ * //     ],
+ * //     [
+ * //         { x: 1, y: 0 },
+ * //         { x: 1, y: 1 }
+ * //     ]
+ * // ]
+ */
+export function generate2DArray<T>(
+    size: { x: number; y: number },
+    callback: (
+        relativePos: { x: number; y: number } // The relative position of the element in the array.
+    ) => T
+): T[][] {
+    return Array.from({ length: size.x }, (_, x) =>
+        Array.from({ length: size.y }, (_, y) => callback({ x, y }))
+    );
+}
+
+/**
  * Generates a 3D array with the given size and calls a generator function for each element.
  * @param size The size of the 3D array.
  * @param callback The generator function to be called for each element.
  * @returns {T[][][]} The 3D array.
  * @example
- * generate3DArray({ x: 2, y: 2, z: 2 }, ({ x, y, z }) => ({
- *    type: "stone",
- *    pos: { x, y, z }
- * }));
+ * generate3DArray({ x: 2, y: 2, z: 2 }, (pos) => pos);
  * // The generated 3D array:
  * // [
  * //     [
  * //         [
- * //             { type: "stone", pos: { x: 0, y: 0, z: 0 } },
- * //             { type: "stone", pos: { x: 0, y: 0, z: 1 } }
+ * //             { x: 0, y: 0, z: 0 },
+ * //             { x: 0, y: 0, z: 1 }
  * //         ],
  * //         [
- * //             { type: "stone", pos: { x: 0, y: 1, z: 0 } },
- * //             { type: "stone", pos: { x: 0, y: 1, z: 1 } }
+ * //             { x: 0, y: 1, z: 0 },
+ * //             { x: 0, y: 1, z: 1 }
  * //         ]
  * //     ],
  * //     [
  * //         [
- * //             { type: "stone", pos: { x: 1, y: 0, z: 0 } },
- * //             { type: "stone", pos: { x: 1, y: 0, z: 1 } }
+ * //             { x: 1, y: 0, z: 0 },
+ * //             { x: 1, y: 0, z: 1 }
  * //         ],
  * //         [
- * //             { type: "stone", pos: { x: 1, y: 1, z: 0 } },
- * //             { type: "stone", pos: { x: 1, y: 1, z: 1 } }
+ * //             { x: 1, y: 1, z: 0 },
+ * //             { x: 1, y: 1, z: 1 }
  * //         ]
  * //     ]
  * // ]
