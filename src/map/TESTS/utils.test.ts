@@ -1,79 +1,53 @@
-import { Block } from "@/map/block";
-import { traverseBlockArray, generateBlockArray } from "@/map/utils";
-
-// // Generate a 3D array of blocks
-// function generateBlockArray(size: number): Block[][][] {
-//     return Array.from({ length: size }, (_, x) =>
-//         Array.from({ length: size }, (_, y) =>
-//             Array.from({ length: size }, (_, z) => ({
-//                 type: "stone",
-//                 pos: { x, y, z }
-//             }))
-//         )
-//     );
-// }
+import { traverse3DArray, generate3DArray } from "@/map/utils";
 
 // Generate the expected call order
 const size = 2;
 const expectedCallOrder = Array.from({ length: size }, (_, x) =>
     Array.from({ length: size }, (_, y) =>
-        Array.from({ length: size }, (_, z) => ({
-            block: { type: "stone", pos: { x, y, z } },
-            relativePos: { x, y, z }
-        }))
+        Array.from({ length: size }, (_, z) => ({ x, y, z }))
     )
 ).flat(size);
 
-describe("traverseBlockArray", () => {
-    it("should call the callback with the correct parameters", () => {
+describe("traverse3DArray", () => {
+    it("should call the callback with the correct order", () => {
         // Define a mock callback
         const callback = jest.fn();
 
-        // Create a 3D array of blocks
-        const arr: Block[][][] = generateBlockArray(
+        // Create a 3D array of elements
+        const arr = generate3DArray(
             { x: size, y: size, z: size },
-            ({ x, y, z }) => ({
-                type: "stone",
-                pos: { x, y, z }
-            })
+            (pos) => pos // Actually in format { x, y, z }
         );
 
         // Call the function with the array and the mock callback
-        traverseBlockArray(arr, callback);
+        traverse3DArray(arr, callback);
 
         // Check if the callback was called with the correct parameters
         for (const [index, expectedCall] of expectedCallOrder.entries()) {
             expect(callback).toHaveBeenNthCalledWith(
                 index + 1,
-                expectedCall.block,
-                expectedCall.relativePos
+                expectedCall,
+                expectedCall
             );
         }
     });
 });
 
-describe("generateBlockArray", () => {
-    it("should generate a 3D block array with the correct size and blocks", () => {
+describe("generate3DArray", () => {
+    it("should generate a 3D array with the correct size and elements", () => {
         const size = 2;
-        const arr = generateBlockArray(
+        const arr = generate3DArray(
             {
                 x: size,
                 y: size,
                 z: size
             },
-            ({ x, y, z }) => ({
-                type: "stone",
-                pos: { x, y, z }
-            })
+            (pos) => pos // Actually in format { x, y, z }
         );
 
-        traverseBlockArray(arr, (block, relativePos) => {
-            const expectedBlock = {
-                type: "stone",
-                pos: relativePos
-            };
-
-            expect(block).toEqual(expectedBlock);
+        traverse3DArray(arr, (element, relativePos) => {
+            const expectedElement = relativePos;
+            expect(element).toEqual(expectedElement);
         });
     });
 });

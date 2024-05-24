@@ -1,6 +1,6 @@
 import { Block, BlockPos } from "@/map/block";
 import { Chunk, ChunkPos } from "@/map/chunk";
-import { generateBlockArray } from "@/map/utils";
+import { generate3DArray } from "@/map/utils";
 
 /**
  * A 3D map generator.
@@ -34,7 +34,7 @@ class Generator3D {
      */
     generateChunk(pos: ChunkPos) {
         const chunk = new Chunk({ pos, blocks: [] });
-        const blocks = generateBlockArray(
+        const blocks = generate3DArray(
             { x: Chunk.SIZE, y: Chunk.SIZE, z: Chunk.HEIGHT },
             (relativePos) => {
                 const absolutePos =

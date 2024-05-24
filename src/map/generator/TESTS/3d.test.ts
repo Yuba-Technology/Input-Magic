@@ -1,7 +1,7 @@
 import { Block, BlockPos } from "@/map/block";
 import { Chunk } from "@/map/chunk";
 import { Generator3D } from "@/map/generator/3d";
-import { traverseBlockArray } from "@/map/utils";
+import { traverse3DArray } from "@/map/utils";
 
 describe("MapGenerator", () => {
     let generator3D: Generator3D;
@@ -31,7 +31,7 @@ describe("MapGenerator", () => {
         expect(chunk).toBeInstanceOf(Chunk);
         expect(chunk.pos).toEqual(pos);
         expect(chunk.blocks).toHaveLength(Chunk.SIZE);
-        traverseBlockArray(chunk.blocks, (block, relativePos: BlockPos) => {
+        traverse3DArray(chunk.blocks, (block, relativePos: BlockPos) => {
             // Check if the block is an instance of Block
             expect(block).toBeInstanceOf(Block);
 

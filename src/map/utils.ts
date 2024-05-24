@@ -1,51 +1,49 @@
-import { Block } from "@/map/block";
-
 /**
- * Traverses a 3D block array and calls a callback function for each element.
+ * Traverses a 3D array and calls a callback function for each element.
  * The order of traversal is z-axis first, then y-axis, and finally x-axis.
- * @param arr The 3D block array to be traversed.
+ * @param arr The 3D array to be traversed.
  * @param callback The callback function to be called for each element.
  * @returns {void}
  * @example
  * [
  *     [
- *         [block1, block2],
- *         [block3, block4]
+ *         [element1, element2],
+ *         [element3, element4]
  *     ],
  *     [
- *        [block5, block6],
- *        [block7, block8]
+ *        [element5, element6],
+ *        [element7, element8]
  *     ]
  * ]
- * // The order of traversal is block1, block2, block3, block4, block5, block6, block7, block8.
+ * // The order of traversal is element1, element2, element3, element4, element5, element6, element7, element8.
  */
-export function traverseBlockArray(
-    arr: Block[][][],
+export function traverse3DArray<T>(
+    arr: T[][][],
     callback: (
-        block: Block,
-        relativePos: { x: number; y: number; z: number } // The relative position of the block in the array.
+        element: T,
+        relativePos: { x: number; y: number; z: number } // The relative position of the element in the array.
     ) => void
 ) {
     for (const [x, xLayer] of arr.entries()) {
         for (const [y, yLayer] of xLayer.entries()) {
-            for (const [z, block] of yLayer.entries()) {
-                callback(block, { x, y, z });
+            for (const [z, element] of yLayer.entries()) {
+                callback(element, { x, y, z });
             }
         }
     }
 }
 
 /**
- * Generates a 3D block array with the given size and calls a generator function for each block.
- * @param size The size of the 3D block array.
- * @param callback The generator function to be called for each block.
- * @returns {Block[][][]} The 3D block array.
+ * Generates a 3D array with the given size and calls a generator function for each element.
+ * @param size The size of the 3D array.
+ * @param callback The generator function to be called for each element.
+ * @returns {T[][][]} The 3D array.
  * @example
- * generateBlockArray({ x: 2, y: 2, z: 2 }, ({ x, y, z }) => ({
+ * generate3DArray({ x: 2, y: 2, z: 2 }, ({ x, y, z }) => ({
  *    type: "stone",
  *    pos: { x, y, z }
  * }));
- * // The generated 3D block array:
+ * // The generated 3D array:
  * // [
  * //     [
  * //         [
@@ -69,12 +67,12 @@ export function traverseBlockArray(
  * //     ]
  * // ]
  */
-export function generateBlockArray(
+export function generate3DArray<T>(
     size: { x: number; y: number; z: number },
     callback: (
-        relativePos: { x: number; y: number; z: number } // The relative position of the block in the array.
-    ) => Block
-): Block[][][] {
+        relativePos: { x: number; y: number; z: number } // The relative position of the element in the array.
+    ) => T
+): T[][][] {
     return Array.from({ length: size.x }, (_, x) =>
         Array.from({ length: size.y }, (_, y) =>
             Array.from({ length: size.z }, (_, z) => callback({ x, y, z }))
