@@ -18,7 +18,6 @@ type BlockPos = {
  * @property {string} type - The type of the block.
  */
 interface BlockInterface {
-    pos: BlockPos; // The position of the block.
     type: string; // The type of the block.
 }
 
@@ -27,7 +26,6 @@ interface BlockInterface {
  * @class
  */
 class Block implements BlockInterface {
-    pos: BlockPos;
     type: string;
 
     /**
@@ -35,8 +33,7 @@ class Block implements BlockInterface {
      * @param pos - The position of the block.
      * @param type - The type of the block.
      */
-    constructor(pos: BlockPos, type: string) {
-        this.pos = pos;
+    constructor(type: string) {
         this.type = type;
     }
 }

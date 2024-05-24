@@ -24,7 +24,7 @@ class Generator3D {
      */
     generateBlock(pos: BlockPos) {
         // TODO: Implement block generation based on seed.
-        return new Block(pos, "stone");
+        return new Block("stone");
     }
 
     /**
