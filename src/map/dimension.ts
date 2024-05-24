@@ -1,6 +1,7 @@
-import { BlockPos } from "@/map/block";
+import { Block, BlockPos } from "@/map/block";
 import { Chunk, ChunkPos } from "@/map/chunk";
 import { Generator3D } from "@/map/generator/3d";
+import { generate2DArray } from "@/map/utils";
 
 /**
  * The configuration for a dimension in the world.
@@ -33,8 +34,17 @@ interface DimensionInterface {
     // If generate is true, generate the chunk if it doesn't exist.
     // `generate` default to true.
     getChunkFromChunkPos(pos: ChunkPos, generate: boolean): Chunk | null;
+    // Get chunks in a radius around the given position.
+    // Uses Chebyshev distance.
+    getChunksInRadius(pos: ChunkPos, radius: number): Chunk[];
     // Check if a chunk exists at the given position.
     hasChunk(pos: ChunkPos): boolean;
+    // Generate a new chunk at the given position.
+    generateChunk(pos: ChunkPos): Chunk;
+    // Get a block at the given position.
+    getBlock(pos: BlockPos, generate: boolean): Block | null;
+    // Set a block at the given position.
+    setBlock(pos: BlockPos, block: Block, generate: boolean): void;
 }
 
 /**
@@ -70,6 +80,7 @@ class Dimension implements DimensionInterface {
     /**
      * Get the chunk that contains a block at the given position.
      * @param pos The position of the block.
+     * @param generate Whether to generate the chunk if it doesn't exist. Default to true.
      * @returns The chunk that contains the block.
      */
     getChunkFromBlockPos(pos: BlockPos, generate = true): Chunk | null {
@@ -83,6 +94,7 @@ class Dimension implements DimensionInterface {
     /**
      * Get the chunk at the given position.
      * @param pos The position of the chunk.
+     * @param generate Whether to generate the chunk if it doesn't exist. Default to true.
      * @returns The chunk at the given position.
      */
     getChunkFromChunkPos(pos: ChunkPos, generate = true): Chunk | null {
@@ -95,6 +107,36 @@ class Dimension implements DimensionInterface {
     }
 
     /**
+     * Get chunks in a radius around the given position.
+     * Uses Chebyshev distance.
+     * @param pos The position of the center.
+     * @param radius The radius around the center.
+     * @returns The chunk in the radius.
+     */
+    getChunksInRadius(
+        pos: ChunkPos,
+        radius: number,
+        generate = true
+    ): Chunk[] {
+        const chunks: Chunk[] = generate2DArray(
+            { x: radius * 2 + 1 + pos.x, y: radius * 2 + 1 + pos.y },
+            (relativePos) => {
+                const absolutePos = {
+                    x: relativePos.x - radius,
+                    y: relativePos.y - radius
+                };
+
+                return this.getChunkFromChunkPos(absolutePos, generate);
+            }
+        )
+            .flat()
+            // Use `is` to tell TypeScript that we will remove all null values in the `filter` function.
+            .filter((chunk): chunk is Chunk => chunk !== null);
+
+        return chunks;
+    }
+
+    /**
      * Generate a new chunk at the given position.
      * @param pos The position of the chunk to be generated.
      * @returns Generated new chunk.
@@ -103,6 +145,38 @@ class Dimension implements DimensionInterface {
         const chunk = this.generator.generateChunk(pos);
         this.chunks[`${pos.x},${pos.y}`] = chunk;
         return chunk;
+    }
+
+    /**
+     * Get a block at the given position.
+     * @param pos The position of the block.
+     * @param generate Whether to generate the chunk if it doesn't exist. Default to true.
+     * @returns The block at the given position.
+     */
+    getBlock(pos: BlockPos, generate = true): Block | null {
+        const chunk = this.getChunkFromBlockPos(pos, generate);
+        if (!chunk) {
+            return null;
+        }
+
+        const relativePos = chunk.absoluteToRelativePosition(pos);
+        return chunk.blocks[relativePos.x][relativePos.y][relativePos.z];
+    }
+
+    /**
+     * Set a block at the given position.
+     * @param pos The position of the block.
+     * @param block The block to be set.
+     * @param generate Whether to generate the chunk if it doesn't exist. Default to true.
+     */
+    setBlock(pos: BlockPos, block: Block, generate = true): void {
+        const chunk = this.getChunkFromBlockPos(pos, generate);
+        if (!chunk) {
+            return;
+        }
+
+        const relativePos = chunk.absoluteToRelativePosition(pos);
+        chunk.blocks[relativePos.x][relativePos.y][relativePos.z] = block;
     }
 }
 
