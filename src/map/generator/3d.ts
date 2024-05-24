@@ -33,19 +33,19 @@ class Generator3D {
      * @returns The generated chunk.
      */
     generateChunk(pos: ChunkPos) {
+        const chunk = new Chunk({ pos, blocks: [] });
         const blocks = generateBlockArray(
             { x: Chunk.SIZE, y: Chunk.SIZE, z: Chunk.HEIGHT },
             (relativePos) => {
-                const absolutePos = {
-                    x: Chunk.SIZE * pos.x + relativePos.x,
-                    y: Chunk.SIZE * pos.y + relativePos.y,
-                    z: relativePos.z
-                };
+                const absolutePos =
+                    chunk.relativeToAbsolutePosition(relativePos);
                 return this.generateBlock(absolutePos);
             }
         );
 
-        return new Chunk({ pos, blocks });
+        chunk.blocks = blocks;
+
+        return chunk;
     }
 }
 

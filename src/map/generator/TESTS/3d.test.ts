@@ -37,8 +37,8 @@ describe("MapGenerator", () => {
 
             // Check if the block position is correct
             const absolutePos = {
-                x: Chunk.SIZE * pos.x + relativePos.x,
-                y: Chunk.SIZE * pos.y + relativePos.y,
+                x: chunk.relativeToAbsolutePosition(relativePos).x,
+                y: chunk.relativeToAbsolutePosition(relativePos).y,
                 z: relativePos.z
             };
             expect(block.type).toEqual(JSON.stringify(absolutePos));
