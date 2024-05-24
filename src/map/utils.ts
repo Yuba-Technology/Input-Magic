@@ -1,3 +1,70 @@
+/* ----------------------------------------------- *\
+ *                  Math utilities                 *
+\* ----------------------------------------------- */
+
+/**
+ * Calculates the Chebyshev distance between two points.
+ * @param pos1 The first point.
+ * @param pos2 The second point.
+ * @returns {number} The Chebyshev distance.
+ * @example
+ * chebyshevDistance({ x: 0, y: 0 }, { x: 1, y: 1 }); // 1
+ * chebyshevDistance({ x: 0, y: 0 }, { x: 2, y: 3 }); // 3
+ * chebyshevDistance({ x: 0, y: 0, z: 0 }, { x: 1, y: 2, z: 3 }); // 3
+ */
+export function chebyshevDistance(
+    pos1: { x: number; y: number; z?: number },
+    pos2: { x: number; y: number; z?: number }
+): number {
+    const z =
+        pos1.z !== undefined && pos2.z !== undefined
+            ? Math.abs(pos1.z - pos2.z)
+            : 0;
+    return Math.max(Math.abs(pos1.x - pos2.x), Math.abs(pos1.y - pos2.y), z);
+}
+
+/**
+ * Calculates the Manhattan distance between two points.
+ * @param pos1 The first point.
+ * @param pos2 The second point.
+ * @returns {number} The Manhattan distance.
+ */
+export function manhattanDistance(
+    pos1: { x: number; y: number; z?: number },
+    pos2: { x: number; y: number; z?: number }
+): number {
+    const z =
+        pos1.z !== undefined && pos2.z !== undefined
+            ? Math.abs(pos1.z - pos2.z)
+            : 0;
+    return Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y - pos2.y) + z;
+}
+
+/**
+ * Calculates the Euclidean distance between two points.
+ * @param pos1 The first point.
+ * @param pos2 The second point.
+ * @returns {number} The Euclidean distance.
+ * @example
+ * euclideanDistance({ x: 0, y: 0 }, { x: 1, y: 1 }); // 1.4142135623730951
+ * euclideanDistance({ x: 0, y: 0 }, { x: 2, y: 3 }); // 3.605551275463989
+ * euclideanDistance({ x: 0, y: 0, z: 0 }, { x: 1, y: 2, z: 3 }); // 3.7416573867739413
+ */
+export function euclideanDistance(
+    pos1: { x: number; y: number; z?: number },
+    pos2: { x: number; y: number; z?: number }
+): number {
+    const z =
+        pos1.z !== undefined && pos2.z !== undefined
+            ? (pos1.z - pos2.z) ** 2
+            : 0;
+    return Math.sqrt((pos1.x - pos2.x) ** 2 + (pos1.y - pos2.y) ** 2 + z);
+}
+
+/* ----------------------------------------------- *\
+ *                 Array utilities                 *
+\* ----------------------------------------------- */
+
 /**
  * Traverses a 2D array and calls a callback function for each element.
  * The order of traversal is y-axis first, and then x-axis.

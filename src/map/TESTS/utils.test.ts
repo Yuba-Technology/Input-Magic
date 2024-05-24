@@ -5,6 +5,12 @@ import {
     traverse3DArray
 } from "@/map/utils";
 
+// We don't test math functions, because they are too simple and don't have any side effects.
+
+/* ----------------------------------------------- *\
+ *              Array utilities tests              *
+\* ----------------------------------------------- */
+
 // Generate the expected call order
 const size2D = 1;
 const expected2DCallOrder = Array.from({ length: size2D }, (_, x) =>
