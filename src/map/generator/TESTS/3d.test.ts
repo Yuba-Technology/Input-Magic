@@ -10,20 +10,27 @@ describe("MapGenerator", () => {
         generator3D = new Generator3D("testSeed");
     });
 
-    it("should generate a block with correct position and type", () => {
-        const pos = { x: 1, y: 2, z: 3 };
-        const block = generator3D.generateBlock(pos);
-
-        expect(block).toBeInstanceOf(Block);
-        // expect(block.type).toBe("stone");
+    it("should generate a block array for z-axis", () => {
+        const pos = { x: 1, y: 2 };
+        const blocks = generator3D.generateZAxis(pos);
+        expect(blocks).toHaveLength(Chunk.HEIGHT);
     });
 
     it("should generate a chunk with correct position and blocks", () => {
         const pos = { x: 1, y: 2 };
 
         // Mock the generateBlock method, to check whether the positions are correct.
-        generator3D.generateBlock = jest.fn(
-            (pos: BlockPos) => new Block(JSON.stringify(pos))
+        generator3D.generateZAxis = jest.fn(
+            (pos: { x: number; y: number }) => {
+                const blocks: Block[] = [];
+                for (let i = 0; i < Chunk.HEIGHT; i++) {
+                    blocks.push(
+                        new Block(JSON.stringify({ x: pos.x, y: pos.y, z: i }))
+                    );
+                }
+
+                return blocks;
+            }
         );
 
         const chunk = generator3D.generateChunk(pos);
