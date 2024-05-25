@@ -21,7 +21,8 @@ module.exports = {
             "error",
             "ignorePackages",
             {
-                js: "always"
+                js: "never",
+                ts: "never"
             }
         ],
         "import/first": "error",
