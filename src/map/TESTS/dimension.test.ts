@@ -46,9 +46,9 @@ describe("Dimension class", () => {
 
         // Non-existing chunk
         const blockPosAtNewChunk: BlockPos = {
-            x: 0 + Chunk.SIZE,
-            y: 0 + Chunk.SIZE,
-            z: 0 + Chunk.SIZE
+            x: -1 - Chunk.SIZE,
+            y: -1 - Chunk.SIZE,
+            z: -1 - Chunk.SIZE
         };
 
         // Non-existing chunk, disallow generation
@@ -59,7 +59,7 @@ describe("Dimension class", () => {
         // Non-existing chunk, allow generation
         const newChunk = dimension.getChunkFromBlockPos(blockPosAtNewChunk);
         expect(newChunk).toBeInstanceOf(Chunk);
-        expect(newChunk!.pos).toEqual({ x: 1, y: 1 });
+        expect(newChunk!.pos).toEqual({ x: -2, y: -2 });
     });
 
     // Test chunk getter with chunk position (getChunkFromChunkPos method)

@@ -88,6 +88,7 @@ class Dimension implements DimensionInterface {
             x: Math.floor(pos.x / Chunk.SIZE),
             y: Math.floor(pos.y / Chunk.SIZE)
         };
+
         return this.getChunkFromChunkPos(chunkPos, generate);
     }
 
@@ -160,6 +161,7 @@ class Dimension implements DimensionInterface {
         }
 
         const relativePos = chunk.absoluteToRelativePosition(pos);
+        // console.log(chunk, relativePos);
         return chunk.blocks[relativePos.x][relativePos.y][relativePos.z];
     }
 
