@@ -2,7 +2,8 @@
 // a simple interface. Sorry! -wwwtyro
 // https://github.com/wwwtyro/perlin.js
 
-function Perlin(seed) {
+// @ts-nocheck
+function Perlin(seed: string) {
     // Alea random number generator.
     //----------------------------------------------------------------------------//
 
@@ -500,6 +501,11 @@ function Perlin(seed) {
     this.noise = function (x, y, z) {
         return 0.5 * noise.noise(x, y, z) + 0.5;
     };
+}
+
+declare class Perlin {
+    constructor(seed: string);
+    noise(x: number, y: number, z: number): number;
 }
 
 export default Perlin;
