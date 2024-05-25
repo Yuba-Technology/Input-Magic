@@ -88,9 +88,14 @@ class Chunk implements ChunkInterface {
      * @returns The relative position inside the chunk.
      */
     absoluteToRelativePosition(pos: BlockPos): RelativeBlockPos {
+        const relativeX =
+            pos.x < 0 ? (pos.x % Chunk.SIZE) + Chunk.SIZE : pos.x % Chunk.SIZE;
+        const relativeY =
+            pos.y < 0 ? (pos.y % Chunk.SIZE) + Chunk.SIZE : pos.y % Chunk.SIZE;
+
         return {
-            x: pos.x % Chunk.SIZE,
-            y: pos.y % Chunk.SIZE,
+            x: relativeX === 16 ? 0 : relativeX,
+            y: relativeY === 16 ? 0 : relativeY,
             z: pos.z // z is the same in both relative and absolute positions
         };
     }
