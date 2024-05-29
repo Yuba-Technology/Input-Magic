@@ -1,4 +1,5 @@
 import { BlockPos } from "@/map/block";
+import { eventBus } from "@/event-bus";
 
 interface TickerTask {
     // The priority of the task, the higher the number, the higher the priority.
@@ -95,7 +96,6 @@ class Ticker implements TickerInterface {
     static TPS = 10; // Ticks per second
     static TickDuration = 1000 / Ticker.TPS; // The duration of each tick, milliseconds
     tasks: TaskList; // The tasks to be executed on each tick.
-    changedBlocks: Set<BlockPos>; // The positions of the blocks that has been changed and may affect the rendering of the map.
     // The time when the instance of the ticker is started, milliseconds, from performance.now(). If null, the ticker is not started.
     private _startTime: number | null = null;
     // The ID of the ticker. If null, the ticker is not running.
@@ -106,8 +106,6 @@ class Ticker implements TickerInterface {
      */
     constructor() {
         this.tasks = new TaskList();
-        this.changedBlocks = new Set();
-
         this._execute = this._execute.bind(this);
     }
 
@@ -154,7 +152,7 @@ class Ticker implements TickerInterface {
             if (changedBlocksInTask === undefined) continue;
 
             // Add the changed blocks to the set of changed blocks.
-            for (const blockPos of this.changedBlocks) {
+            for (const blockPos of changedBlocksInTask) {
                 changedBlocks.add(blockPos);
             }
         }
@@ -162,7 +160,8 @@ class Ticker implements TickerInterface {
         // Remove the disposed tasks.
         this.tasks.sweep();
 
-        // TODO: Call the renderer with the changed blocks.
+        // Emit the tick event.
+        eventBus.emit("tick", { changedBlocks });
     }
 
     /**

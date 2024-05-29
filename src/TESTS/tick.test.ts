@@ -1,4 +1,5 @@
 import { Ticker, TaskList } from "@/tick";
+import { eventBus } from "@/event-bus";
 
 describe("TaskManager", () => {
     let taskList: TaskList;
@@ -87,5 +88,32 @@ describe("Ticker", () => {
 
         const callTimes = mockTask.update.mock.invocationCallOrder;
         expect(callTimes.length).toBeCloseTo(totalTicks + 1, -2); // allow 2 digits of tolerance
+    });
+
+    it("should emit a tick event on each tick", () => {
+        // Prepare a task that updates the blocks
+        const testBlocks = new Set([
+            { x: 0, y: 0, z: 0 },
+            { x: 0, y: 1, z: 0 }
+        ]);
+        const mockHandler = jest.fn();
+        const blockChanger = {
+            priority: 1,
+            update: () => testBlocks
+        };
+
+        // Add the task to the ticker
+        ticker.tasks.add(blockChanger);
+
+        // Subscribe to the tick event
+        eventBus.on("tick", mockHandler);
+
+        // Start the ticker
+        ticker.start();
+
+        expect(mockHandler).toHaveBeenCalled();
+        expect(mockHandler.mock.calls[0][0]).toEqual({
+            changedBlocks: testBlocks
+        });
     });
 });
