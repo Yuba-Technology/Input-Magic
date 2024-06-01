@@ -43,6 +43,30 @@ class KeyboardManager {
         );
     }
 
+    private isKeyPressed(key: string): boolean {
+        if (key.length > 1 || key === " ") return this.pressedKeys.has(key);
+
+        const keyUpper = key.toUpperCase();
+        const keyLower = key.toLowerCase();
+
+        return (
+            this.pressedKeys.has(keyUpper) || this.pressedKeys.has(keyLower)
+        );
+    }
+
+    private deleteKey(key: string) {
+        if (key.length > 1 || key === " ") {
+            this.pressedKeys.delete(key);
+            return;
+        }
+
+        const keyUpper = key.toUpperCase();
+        const keyLower = key.toLowerCase();
+
+        this.pressedKeys.delete(keyUpper);
+        this.pressedKeys.delete(keyLower);
+    }
+
     /**
      * Handle the keydown event.
      * @param event The keydown event.
@@ -50,7 +74,7 @@ class KeyboardManager {
      */
     private handleKeyDown(event: KeyboardEvent) {
         event.preventDefault();
-        if (this.pressedKeys.has(event.key)) return;
+        if (this.isKeyPressed(event.key)) return;
 
         this.pressedKeys.add(event.key);
         this.publishKeyEvent();
@@ -62,9 +86,13 @@ class KeyboardManager {
      * @private
      */
     private handleKeyUp(event: KeyboardEvent) {
-        if (!this.pressedKeys.has(event.key)) return;
+        event.preventDefault();
 
-        this.pressedKeys.delete(event.key);
+        const { key } = event;
+
+        if (!this.isKeyPressed(key)) return;
+
+        this.deleteKey(key);
         this.publishKeyEvent();
     }
 
