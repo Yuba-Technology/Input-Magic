@@ -1,4 +1,8 @@
-type EventHandler = (event: object) => void | Promise<void>;
+type EventData = {
+    [key: string]: unknown;
+};
+
+type EventHandler = (event: EventData) => void | Promise<void>;
 
 /**
  * An event bus that allows subscribing to and emitting events.
@@ -48,7 +52,7 @@ class EventBus {
      * @param name The event name.
      * @param event The event data.
      */
-    async emit(name: string, event: object): Promise<void> {
+    async emit(name: string, event: EventData): Promise<void> {
         if (!this._events[name]) return;
 
         await Promise.all(this._events[name].map((handler) => handler(event)));
