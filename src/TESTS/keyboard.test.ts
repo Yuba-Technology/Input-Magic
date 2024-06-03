@@ -17,6 +17,8 @@ describe("KeyboardManager2", () => {
         emitSpy.mockRestore();
     });
 
+    // *Note: Testing private methods like _execute and _runTasks directly is not recommended.
+    // *Instead, you should test the public methods that use them, and check their effects.
     it("should start the keyboard manager", () => {
         const addEventListenerSpy = jest.spyOn(document, "addEventListener");
         keyboardManager.start();
@@ -37,7 +39,7 @@ describe("KeyboardManager2", () => {
         document.dispatchEvent(keydownEvent);
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "b" }));
         keyboardManager.stop();
-        // We can't directly access the private property pressedKeys, but we can infer its state by the "keychange" event.
+        // Infer its state by the "keychange" event instead of directly accessing the private property pressedKeys.
         expect(eventBus.emit).toHaveBeenCalledWith(
             "keychange",
             expect.objectContaining({
@@ -51,7 +53,7 @@ describe("KeyboardManager2", () => {
         document.dispatchEvent(keydownEvent);
         document.dispatchEvent(keyupEvent);
         keyboardManager.stop();
-        // We can't directly access the private property pressedKeys, but we can infer its state by the "keychange" event.
+        // Infer its state by the "keychange" event instead of directly accessing the private property pressedKeys.
         expect(eventBus.emit).toHaveBeenCalledWith(
             "keychange",
             expect.objectContaining({
@@ -69,7 +71,7 @@ describe("KeyboardManager2", () => {
         });
         document.dispatchEvent(new Event("visibilitychange"));
         keyboardManager.stop();
-        // We can't directly access the private property pressedKeys, but we can infer its state by the "keychange" event.
+        // Infer its state by the "keychange" event instead of directly accessing the private property pressedKeys.
         expect(eventBus.emit).toHaveBeenCalledWith(
             "keychange",
             expect.objectContaining({
@@ -83,7 +85,7 @@ describe("KeyboardManager2", () => {
         keyboardManager.start();
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "A" }));
         keyboardManager.stop();
-        // We can't directly access the private property pressedKeys, but we can infer its state by the "keychange" event.
+        // Infer its state by the "keychange" event instead of directly accessing the private property pressedKeys.
         expect(eventBus.emit).toHaveBeenCalledWith(
             "keychange",
             expect.objectContaining({
@@ -97,7 +99,7 @@ describe("KeyboardManager2", () => {
         keyboardManager.start();
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "A" }));
         keyboardManager.stop();
-        // We can't directly access the private property pressedKeys, but we can infer its state by the "keychange" event.
+        // Infer its state by the "keychange" event instead of directly accessing the private property pressedKeys.
         expect(eventBus.emit).toHaveBeenCalledWith(
             "keychange",
             expect.objectContaining({
