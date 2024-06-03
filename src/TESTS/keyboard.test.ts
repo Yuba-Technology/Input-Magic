@@ -39,13 +39,14 @@ describe("KeyboardManager2", () => {
         document.dispatchEvent(keydownEvent);
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "b" }));
         keyboardManager.stop();
-        // Infer its state by the "keychange" event instead of directly accessing the private property pressedKeys.
-        expect(eventBus.emit).toHaveBeenCalledWith(
-            "keychange",
-            expect.objectContaining({
-                pressedKeys: expect.any(Set)
-            })
-        );
+
+        const cexpectedCalls = [["a"], ["a", "b"], []];
+        for (const [i, cexpectedCall] of cexpectedCalls.entries()) {
+            expect(emitSpy.mock.calls[i][0]).toBe("keychange");
+            expect(emitSpy.mock.calls[i][1].pressedKeys).toEqual(
+                new Set(cexpectedCall)
+            );
+        }
     });
 
     it("should remove key from pressedKeys set on keyup event", () => {
@@ -53,13 +54,14 @@ describe("KeyboardManager2", () => {
         document.dispatchEvent(keydownEvent);
         document.dispatchEvent(keyupEvent);
         keyboardManager.stop();
-        // Infer its state by the "keychange" event instead of directly accessing the private property pressedKeys.
-        expect(eventBus.emit).toHaveBeenCalledWith(
-            "keychange",
-            expect.objectContaining({
-                pressedKeys: expect.any(Set)
-            })
-        );
+
+        const cexpectedCalls = [["a"], []];
+        for (const [i, cexpectedCall] of cexpectedCalls.entries()) {
+            expect(emitSpy.mock.calls[i][0]).toBe("keychange");
+            expect(emitSpy.mock.calls[i][1].pressedKeys).toEqual(
+                new Set(cexpectedCall)
+            );
+        }
     });
 
     it("should clear pressedKeys set when visibility changes to hidden", () => {
@@ -71,13 +73,14 @@ describe("KeyboardManager2", () => {
         });
         document.dispatchEvent(new Event("visibilitychange"));
         keyboardManager.stop();
-        // Infer its state by the "keychange" event instead of directly accessing the private property pressedKeys.
-        expect(eventBus.emit).toHaveBeenCalledWith(
-            "keychange",
-            expect.objectContaining({
-                pressedKeys: expect.any(Set)
-            })
-        );
+
+        const cexpectedCalls = [["a"], []];
+        for (const [i, cexpectedCall] of cexpectedCalls.entries()) {
+            expect(emitSpy.mock.calls[i][0]).toBe("keychange");
+            expect(emitSpy.mock.calls[i][1].pressedKeys).toEqual(
+                new Set(cexpectedCall)
+            );
+        }
     });
 
     it("should add lowercase key to pressedKeys set if `useLowerCase` is true", () => {
@@ -85,13 +88,14 @@ describe("KeyboardManager2", () => {
         keyboardManager.start();
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "A" }));
         keyboardManager.stop();
-        // Infer its state by the "keychange" event instead of directly accessing the private property pressedKeys.
-        expect(eventBus.emit).toHaveBeenCalledWith(
-            "keychange",
-            expect.objectContaining({
-                pressedKeys: expect.any(Set)
-            })
-        );
+
+        const cexpectedCalls = [["a"], []];
+        for (const [i, cexpectedCall] of cexpectedCalls.entries()) {
+            expect(emitSpy.mock.calls[i][0]).toBe("keychange");
+            expect(emitSpy.mock.calls[i][1].pressedKeys).toEqual(
+                new Set(cexpectedCall)
+            );
+        }
     });
 
     it("should add original case key to pressedKeys set if `useLowerCase` is false", () => {
@@ -99,12 +103,13 @@ describe("KeyboardManager2", () => {
         keyboardManager.start();
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "A" }));
         keyboardManager.stop();
-        // Infer its state by the "keychange" event instead of directly accessing the private property pressedKeys.
-        expect(eventBus.emit).toHaveBeenCalledWith(
-            "keychange",
-            expect.objectContaining({
-                pressedKeys: expect.any(Set)
-            })
-        );
+
+        const cexpectedCalls = [["A"], []];
+        for (const [i, cexpectedCall] of cexpectedCalls.entries()) {
+            expect(emitSpy.mock.calls[i][0]).toBe("keychange");
+            expect(emitSpy.mock.calls[i][1].pressedKeys).toEqual(
+                new Set(cexpectedCall)
+            );
+        }
     });
 });
