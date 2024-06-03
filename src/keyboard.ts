@@ -5,22 +5,19 @@ type KeyEvent = {
 };
 
 /**
- * A manager that manages the keyboard events.
- * It emits a "keychange" event when the pressed keys change.
- * The event data is a `KeyEvent` object.
- * @see KeyEvent
- * @see eventBus
+ * The `KeyboardManager` is responsible for managing keyboard events.
+ * It emits a "keychange" event whenever there is a change in the keys being pressed.
+ * The event data is encapsulated in a `KeyEvent` object.
+ * Please note that this class is primarily intended for handling in-game keyboard events,
+ * and is not designed for handling input fields.
+ *
+ * @see {@link KeyEvent} for the structure of the event data.
+ * @see {@link eventBus} for the event handling system used.
  */
 class KeyboardManager {
+    useLowerCase: boolean = false; // Whether to use lower case for the single character keys.
     private static instance: KeyboardManager; // The singleton instance of the keyboard manager.
     private pressedKeys: Set<string> = new Set(); // The set of pressed keys.
-
-    /**
-     * @constructor
-     */
-    private constructor() {
-        this.init();
-    }
 
     /**
      * Get the singleton instance of the keyboard manager.
@@ -32,17 +29,10 @@ class KeyboardManager {
     }
 
     /**
-     * Initialize the keyboard manager.
+     * Check whether the key is pressed.
+     * @param key The key to be checked.
+     * @returns Whether the key is pressed.
      */
-    private init() {
-        document.addEventListener("keydown", this.handleKeyDown.bind(this));
-        document.addEventListener("keyup", this.handleKeyUp.bind(this));
-        document.addEventListener(
-            "visibilitychange",
-            this.handleVisibilityChange.bind(this)
-        );
-    }
-
     private isKeyPressed(key: string): boolean {
         if (key.length > 1 || key === " ") return this.pressedKeys.has(key);
 
@@ -54,6 +44,10 @@ class KeyboardManager {
         );
     }
 
+    /**
+     * Delete the key from the pressed keys.
+     * @param key The key to be deleted.
+     */
     private deleteKey(key: string) {
         if (key.length > 1 || key === " ") {
             this.pressedKeys.delete(key);
@@ -76,7 +70,11 @@ class KeyboardManager {
         event.preventDefault();
         if (this.isKeyPressed(event.key)) return;
 
-        this.pressedKeys.add(event.key);
+        const key =
+            this.useLowerCase && event.key.length === 1 && event.key !== " "
+                ? event.key.toLowerCase()
+                : event.key;
+        this.pressedKeys.add(key);
         this.publishKeyEvent();
     }
 
@@ -125,7 +123,36 @@ class KeyboardManager {
         };
         eventBus.emit("keychange", keyEvent);
     }
+
+    /**
+     * Start the keyboard manager.
+     * It listens to the keydown, keyup, and visibilitychange events.
+     */
+    start() {
+        document.addEventListener("keydown", this.handleKeyDown.bind(this));
+        document.addEventListener("keyup", this.handleKeyUp.bind(this));
+        document.addEventListener(
+            "visibilitychange",
+            this.handleVisibilityChange.bind(this)
+        );
+    }
+
+    /**
+     * Stop the keyboard manager.
+     * It removes the listeners of the keydown, keyup, and visibilitychange events.
+     */
+    stop() {
+        this.clearPressedKeys();
+        document.removeEventListener("keydown", this.handleKeyDown);
+        document.removeEventListener("keyup", this.handleKeyUp);
+        document.removeEventListener(
+            "visibilitychange",
+            this.handleVisibilityChange
+        );
+    }
 }
 
 // Auto initialize the keyboard manager when the script is loaded.
-KeyboardManager.getInstance();
+const keyboardManager = KeyboardManager.getInstance();
+
+export { keyboardManager, KeyEvent };
