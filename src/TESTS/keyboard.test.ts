@@ -19,19 +19,25 @@ describe("KeyboardManager2", () => {
 
     // *Note: Testing private methods like _execute and _runTasks directly is not recommended.
     // *Instead, you should test the public methods that use them, and check their effects.
-    it("should start the keyboard manager", () => {
+    it("should start the keyboard manager properly", () => {
         const addEventListenerSpy = jest.spyOn(document, "addEventListener");
         keyboardManager.start();
         expect(addEventListenerSpy).toHaveBeenCalledTimes(3);
     });
 
-    it("should stop the keyboard manager", () => {
+    it("should stop the keyboard manager properly", () => {
         const removeEventListenerSpy = jest.spyOn(
             document,
             "removeEventListener"
         );
+        keyboardManager.start();
         keyboardManager.stop();
+
+        // Call the keyboard event again to test if it stops properly
+        document.dispatchEvent(keydownEvent);
+
         expect(removeEventListenerSpy).toHaveBeenCalledTimes(3);
+        expect(emitSpy).toHaveBeenCalledTimes(1); // Only the clear event by stop
     });
 
     it("should add key to pressedKeys set on keydown event", () => {

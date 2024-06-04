@@ -15,9 +15,16 @@ type KeyEvent = {
  * @see {@link eventBus} for the event handling system used.
  */
 class KeyboardManager {
-    useLowerCase: boolean = false; // Whether to use lower case for the single character keys.
+    useLowerCase: boolean = true; // Whether to use lower case for the single character keys.
     private static instance: KeyboardManager; // The singleton instance of the keyboard manager.
     private pressedKeys: Set<string> = new Set(); // The set of pressed keys.
+
+    constructor() {
+        // Bind this to the event handlers
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.handleKeyUp = this.handleKeyUp.bind(this);
+        this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+    }
 
     /**
      * Get the singleton instance of the keyboard manager.
@@ -129,11 +136,11 @@ class KeyboardManager {
      * It listens to the keydown, keyup, and visibilitychange events.
      */
     start() {
-        document.addEventListener("keydown", this.handleKeyDown.bind(this));
-        document.addEventListener("keyup", this.handleKeyUp.bind(this));
+        document.addEventListener("keydown", this.handleKeyDown);
+        document.addEventListener("keyup", this.handleKeyUp);
         document.addEventListener(
             "visibilitychange",
-            this.handleVisibilityChange.bind(this)
+            this.handleVisibilityChange
         );
     }
 
