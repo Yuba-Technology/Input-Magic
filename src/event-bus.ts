@@ -1,11 +1,26 @@
+/**
+ * The structure of an event data object.
+ * Notice that we use the `unknown` type for the values of the object,
+ * which allows for flexibility in the structure of the event data.
+ * This structure is used to define the data that is passed to the event handlers.
+ */
 type EventData = {
     [key: string]: unknown;
 };
 
+/**
+ * The structure of an event handler.
+ */
 type EventHandler = (event: EventData) => void | Promise<void>;
 
 /**
- * An event bus that allows subscribing to and emitting events.
+ * An event bus that implements the publish-subscribe pattern.
+ * It allows components of an application to communicate with each other
+ * by subscribing to and emitting named events. The EventBus class is a singleton,
+ * ensuring that only one instance of the event bus exists in the application.
+ *
+ * @see {@link EventData} for the structure of the event data.
+ * @see {@link EventHandler} for the structure of the event handler.
  */
 class EventBus {
     private static _instance: EventBus;
