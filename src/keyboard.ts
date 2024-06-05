@@ -6,7 +6,7 @@ type KeyEvent = {
 
 /**
  * The `KeyboardManager` is responsible for managing keyboard events.
- * It emits a "keychange" event whenever there is a change in the keys being pressed.
+ * It emits a "keychange" event whenever there is a change in the keys being pressed or released.
  * The event data is encapsulated in a `KeyEvent` object.
  * Please note that this class is primarily intended for handling in-game keyboard events,
  * and is not designed for handling input fields.
