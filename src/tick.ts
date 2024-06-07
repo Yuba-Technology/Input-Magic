@@ -102,7 +102,7 @@ interface TickerInterface {
      */
     tasks: TaskList;
     /**
-     * Returns the number of milliseconds until the next tick, or null if the ticker is not started.
+     * Returns the number of milliseconds until the next tick, or `null` if the ticker is not started.
      */
     getMillisecondsUntilNextTick(): number | null;
     /**
