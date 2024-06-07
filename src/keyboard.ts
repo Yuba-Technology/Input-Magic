@@ -8,32 +8,30 @@ type KeyEvent = {
 };
 
 /**
- * The `KeyboardManager` is responsible for managing keyboard events.
- * It emits a "keychange" event whenever there is a change in the keys being pressed or released.
- * The event data is encapsulated in a `KeyEvent` object.
- * Please note that this class is primarily intended for handling in-game keyboard events,
- * and is not designed for handling input fields.
+ * Manages keyboard events for in-game interactions.
+ * Emits a "keychange" event on key press or release, encapsulated in a `KeyEvent` object.
+ * Not intended for handling input fields.
  *
- * @see {@link KeyEvent} for the structure of the event data.
- * @see {@link eventBus} for the event handling system used.
+ * @see {@link KeyEvent} - Structure of the event data.
+ * @see {@link eventBus} - Event handling system used.
  */
 class KeyboardManager {
     /**
-     * Whether to use lower case for the single character keys.
-     * For example, when this is set to `true`, the key `A` will be converted to `a`.
+     * Singleton instance of the KeyboardManager class.
+     * @static
+     */
+    private static instance: KeyboardManager;
+    /**
+     * Determines if single character keys should be converted to lower case.
+     *
      * Default to `true`.
      */
     useLowerCase: boolean = true;
     /**
-     * The singleton instance of the keyboard manager.
-     * @static
-     */
-    private static instance: KeyboardManager; // The singleton instance of the keyboard manager.
-    /**
-     * The set of pressed keys.
+     * Set of currently pressed keys.
      * @private
      */
-    private pressedKeys: Set<string> = new Set(); // The set of pressed keys.
+    private pressedKeys: Set<string> = new Set();
 
     constructor() {
         // Bind this to the event handlers
@@ -43,8 +41,9 @@ class KeyboardManager {
     }
 
     /**
-     * Get the singleton instance of the keyboard manager.
-     * @returns The singleton instance of the keyboard manager.
+     * Retrieves the singleton instance of the KeyboardManager class, creating it if it doesn't exist.
+     * @static
+     * @returns The singleton instance of the KeyboardManager class.
      */
     static getInstance(): KeyboardManager {
         KeyboardManager.instance ||= new KeyboardManager();
