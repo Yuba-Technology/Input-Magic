@@ -10,7 +10,7 @@ interface TickerTask {
      */
     readonly priority: number;
     /**
-     * Whether the task is disposed. If true, the task will be removed from the ticker.
+     * Whether the task is disposed. If `true`, the task will be removed from the ticker.
      *
      * This will be checked after done calling the update function, so the task can be
      * disposed in the update function.
