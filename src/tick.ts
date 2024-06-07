@@ -7,6 +7,15 @@ interface TickerTask {
      */
     readonly priority: number;
     /**
+     * Whether the task is disposed. If true, the task will be removed from the ticker.
+     *
+     * This will be checked after done calling the update function, so the task can be
+     * disposed in the update function.
+     *
+     * Default to `false`.
+     */
+    disposed?: boolean | (() => boolean);
+    /**
      * The update function of the task to be called on each tick.
      *
      * The function should return the positions of the blocks that has been changed and
@@ -18,15 +27,6 @@ interface TickerTask {
      */
     update: () => Set<BlockPos> | void;
     /**
-     * Whether the task is disposed. If true, the task will be removed from the ticker.
-     *
-     * This will be checked after done calling the update function, so the task can be
-     * disposed in the update function.
-     *
-     * Default to false.
-     */
-    disposed?: boolean | (() => boolean);
-    /**
      * The dispose function of the task to be called when the task is removed from the ticker.
      */
     dispose?: () => void;
@@ -34,9 +34,13 @@ interface TickerTask {
 
 /**
  * A list of tasks to be executed on each tick.
- * The tasks will be sorted by their priority.
+ * The tasks will be sorted by their priority automatically when added.
  */
 class TaskList {
+    /**
+     * The tasks to be executed on each tick.
+     * @private
+     */
     private tasks: TickerTask[] = [];
 
     valueOf() {
@@ -48,7 +52,8 @@ class TaskList {
     }
 
     /**
-     * Add a new task to the list.
+     * Adds a new task to the list, placing it according to its priority.
+     * Higher priority tasks are placed closer to the end of the list.
      * @param task The task to be added.
      */
     add(task: TickerTask) {
@@ -62,29 +67,21 @@ class TaskList {
     }
 
     /**
-     * Check whether the task is disposed.
-     * @param task The task to be checked.
-     * @returns Whether the task is disposed.
+     * Determines whether the given task is disposed.
+     *
+     * If the task does not have a `·`disposed` property,
+     * it is considered not disposed and `false` is returned.
+     * @param task The task to check.
+     * @returns `true` if the task is disposed, `false` otherwise.
      */
     private isDisposed(task: TickerTask): boolean {
-        switch (typeof task.disposed) {
-            case "function": {
-                return (task.disposed as () => boolean)();
-            }
-
-            case "boolean": {
-                return task.disposed as boolean;
-            }
-
-            default: {
-                return false;
-            }
-        }
+        const { disposed } = task;
+        return typeof disposed === "function" ? disposed() : Boolean(disposed);
     }
 
     /**
-     * Dispose the tasks that are disposed.
-     * This will call the dispose function of the task.
+     * Removes disposed tasks from the task list.
+     * If a task has a dispose function, it will be called during removal.
      */
     sweep() {
         this.tasks = this.tasks.filter((task) => {
@@ -96,29 +93,64 @@ class TaskList {
 }
 
 interface TickerInterface {
-    // The tasks to be executed on each tick.
+    /**
+     * The tasks to be executed on each tick.
+     */
     tasks: TaskList;
-    // Get the number of milliseconds until the next tick. If null, the ticker is not started.
+    /**
+     * Returns the number of milliseconds until the next tick, or null if the ticker is not started.
+     */
     getMillisecondsUntilNextTick(): number | null;
-    // Start the ticker.
+    /**
+     * Starts the ticker.
+     * Should be called when entering the game.
+     */
     start(): void;
-    // Stop the ticker.
+    /**
+     * Stops the ticker.
+     * Should be called when exiting the game, or when the game is paused.
+     */
     stop(): void;
 }
 
 /**
- * A ticker that executes tasks on each tick.
- * The tasks will be executed in the order of their priority.
- * After each tick, the ticker will emit a tick event with the changed blocks.
+ * A ticker that executes tasks at a fixed interval, defined by TPS (Ticks Per Second).
+ *
+ * Tasks are executed based on their priority.
+ *
+ * After each tick, a 'tick' event is emitted with the blocks that
+ * have changed during that tick.
  */
 class Ticker implements TickerInterface {
-    static TPS = 10; // Ticks per second
-    static TickDuration = 1000 / Ticker.TPS; // The duration of each tick, milliseconds
-    tasks: TaskList; // The tasks to be executed on each tick.
-    // The time when the instance of the ticker is started, milliseconds, from performance.now(). If null, the ticker is not started.
+    /**
+     * Ticks per second.
+     */
+    static TPS = 10;
+    /**
+     * The duration of each tick, milliseconds.
+     */
+    static TickDuration = 1000 / Ticker.TPS;
+    /**
+     * The tasks to be executed on each tick.
+     */
+    tasks: TaskList;
+    /**
+     * The start time of the ticker instance in milliseconds.
+     *
+     * Derived from `performance.now()`, where the time origin is when the page loads,
+     * not the Unix epoch like `Date.now()`.
+     *
+     * If `null`, the ticker has not started.
+     */
     private startTime: number | null = null;
-    // The ID of the ticker. If null, the ticker is not running.
-    private timeoutId: NodeJS.Timeout | number | null = null;
+    /**
+     * The ID of the timer that schedules the next tick.
+     *
+     * The type is `NodeJS.Timeout` in Node.js and `number` in browsers.
+     *
+     * If `null`, the ticker is not running.
+     */
+    private timerId: NodeJS.Timeout | number | null = null;
 
     /**
      * @constructor
@@ -129,7 +161,7 @@ class Ticker implements TickerInterface {
     }
 
     /**
-     * Start the ticker.
+     * Starts the ticker, if it's not already running.
      */
     start() {
         if (this.startTime !== null) return;
@@ -139,29 +171,30 @@ class Ticker implements TickerInterface {
     }
 
     /**
-     * Stop the ticker.
+     * Starts the ticker, if it's not already running.
      */
     stop() {
         if (this.startTime === null) return;
 
         this.startTime = null;
-        clearTimeout(this.timeoutId!);
-        this.timeoutId = null;
+        clearTimeout(this.timerId!); // Remove the scheduled next tick.
+        this.timerId = null;
     }
 
     /**
-     * Execute the tasks in each tick, and call the next tick's execute function.
+     * Executes the tasks for the current tick and schedules the next tick.
      */
     private execute() {
         this.runTasks();
-        this.timeoutId = setTimeout(
+        this.timerId = setTimeout(
             this.execute,
             this.getMillisecondsUntilNextTick()!
         );
     }
 
     /**
-     * Run the tasks in each tick.
+     * Executes all tasks for the current tick, collects changed blocks,
+     * removes disposed tasks, and emits a 'tick' event.
      */
     private runTasks() {
         const changedBlocks = new Set<BlockPos>();
@@ -184,8 +217,8 @@ class Ticker implements TickerInterface {
     }
 
     /**
-     * Get the number of milliseconds until the next tick.
-     * @returns The number of milliseconds until the next tick.
+     * Calculates the time remaining until the next tick.
+     * @returns The time in milliseconds until the next tick, or `null` if the ticker has not started.
      */
     getMillisecondsUntilNextTick(): number | null {
         if (this.startTime === null) return null;
