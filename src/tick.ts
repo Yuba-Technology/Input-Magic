@@ -1,6 +1,13 @@
 import { BlockPos } from "@/map/block";
 import { eventBus } from "@/event-bus";
 
+type TickEventData = {
+    /**
+     * The set of blocks that have changed during the tick.
+     */
+    changedBlocks: Set<BlockPos>;
+};
+
 /**
  * A task to be executed on each tick.
  */
@@ -96,27 +103,6 @@ class TaskList {
     }
 }
 
-interface TickerInterface {
-    /**
-     * The tasks to be executed on each tick.
-     */
-    tasks: TaskList;
-    /**
-     * Returns the number of milliseconds until the next tick, or `null` if the ticker is not started.
-     */
-    getMillisecondsUntilNextTick(): number | null;
-    /**
-     * Starts the ticker.
-     * Should be called when entering the game.
-     */
-    start(): void;
-    /**
-     * Stops the ticker.
-     * Should be called when exiting the game, or when the game is paused.
-     */
-    stop(): void;
-}
-
 /**
  * A ticker that executes tasks at a fixed interval, defined by TPS (Ticks Per Second).
  *
@@ -124,8 +110,10 @@ interface TickerInterface {
  *
  * After each tick, a 'tick' event is emitted with the blocks that
  * have changed during that tick.
+ *
+ * @see {@link TickerTask} - Structure of the event data.
  */
-class Ticker implements TickerInterface {
+class Ticker {
     /**
      * Ticks per second.
      */
@@ -235,4 +223,4 @@ class Ticker implements TickerInterface {
     }
 }
 
-export { Ticker, TickerTask, TickerInterface, TaskList };
+export { Ticker, TickerTask, TaskList, TickEventData };
