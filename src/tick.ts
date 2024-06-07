@@ -1,6 +1,9 @@
 import { BlockPos } from "@/map/block";
 import { eventBus } from "@/event-bus";
 
+/**
+ * A task to be executed on each tick.
+ */
 interface TickerTask {
     /**
      * The priority of the task. The higher the number, the higher the priority.
@@ -73,6 +76,7 @@ class TaskList {
      * it is considered not disposed and `false` is returned.
      * @param task The task to check.
      * @returns `true` if the task is disposed, `false` otherwise.
+     * @private
      */
     private isDisposed(task: TickerTask): boolean {
         const { disposed } = task;
@@ -183,6 +187,7 @@ class Ticker implements TickerInterface {
 
     /**
      * Executes the tasks for the current tick and schedules the next tick.
+     * @private
      */
     private execute() {
         this.runTasks();
@@ -195,6 +200,7 @@ class Ticker implements TickerInterface {
     /**
      * Executes all tasks for the current tick, collects changed blocks,
      * removes disposed tasks, and emits a 'tick' event.
+     * @private
      */
     private runTasks() {
         const changedBlocks = new Set<BlockPos>();
