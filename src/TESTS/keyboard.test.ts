@@ -89,7 +89,7 @@ describe("KeyboardManager2", () => {
         }
     });
 
-    it("should add lowercase key to pressedKeys set if `useLowerCase` is true", () => {
+    it("should add lowercase key to pressedKeys set if `useLowerCase` is `true`", () => {
         keyboardManager.useLowerCase = true;
         keyboardManager.start();
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "A" }));
@@ -104,7 +104,7 @@ describe("KeyboardManager2", () => {
         }
     });
 
-    it("should add original case key to pressedKeys set if `useLowerCase` is false", () => {
+    it("should add original case key to pressedKeys set if `useLowerCase` is `false`", () => {
         keyboardManager.useLowerCase = false;
         keyboardManager.start();
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "A" }));
