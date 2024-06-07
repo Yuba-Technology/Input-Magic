@@ -28,19 +28,19 @@ class EventBus {
     /**
      * The singleton instance of the event bus.
      */
-    private static _instance: EventBus;
+    private static instance: EventBus;
     /**
      * The events and their corresponding handlers.
      */
-    private _events: { [key: string]: EventHandler[] } = {};
+    private events: { [key: string]: EventHandler[] } = {};
 
     /**
      * Get the singleton instance of the event bus.
      * @returns The singleton instance of the event bus.
      */
     static getInstance(): EventBus {
-        EventBus._instance ||= new EventBus();
-        return EventBus._instance;
+        EventBus.instance ||= new EventBus();
+        return EventBus.instance;
     }
 
     /**
@@ -49,8 +49,8 @@ class EventBus {
      * @param handler The event handler.
      */
     on(event: string, handler: EventHandler): void {
-        this._events[event] ||= [];
-        this._events[event].push(handler);
+        this.events[event] ||= [];
+        this.events[event].push(handler);
     }
 
     /**
@@ -59,14 +59,14 @@ class EventBus {
      * @param handler The event handler.
      */
     off(event: string, handler?: EventHandler): void {
-        if (!this._events[event]) return;
+        if (!this.events[event]) return;
 
         if (handler) {
-            this._events[event] = this._events[event].filter(
+            this.events[event] = this.events[event].filter(
                 (h) => h !== handler
             );
         } else {
-            delete this._events[event];
+            delete this.events[event];
         }
     }
 
@@ -76,9 +76,9 @@ class EventBus {
      * @param event The event data.
      */
     async emit(name: string, event: EventData): Promise<void> {
-        if (!this._events[name]) return;
+        if (!this.events[name]) return;
 
-        await Promise.all(this._events[name].map((handler) => handler(event)));
+        await Promise.all(this.events[name].map((handler) => handler(event)));
     }
 }
 
