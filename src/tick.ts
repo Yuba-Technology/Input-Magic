@@ -2,19 +2,33 @@ import { BlockPos } from "@/map/block";
 import { eventBus } from "@/event-bus";
 
 interface TickerTask {
-    // The priority of the task, the higher the number, the higher the priority.
+    /**
+     * The priority of the task. The higher the number, the higher the priority.
+     */
     readonly priority: number;
-    // The update function of the task to be called on each tick.
-    // The function should return the positions of the blocks that has been changed and
-    // may affect the rendering of the map. If not empty, the renderer will calculate
-    // whether the screen (or the canvas) needs to be updated.
+    /**
+     * The update function of the task to be called on each tick.
+     *
+     * The function should return the positions of the blocks that has been changed and
+     * may affect the rendering of the map.
+     *
+     * If not empty, the renderer will calculate
+     * whether the screen (or exactly the canvas) needs to be updated.
+     * @returns The positions of the blocks that has been changed and may affect the rendering of the map.
+     */
     update: () => Set<BlockPos> | void;
-    // Whether the task is disposed. If true, the task will be removed from the ticker.
-    // This will be checked after done calling the update function, so the task can be
-    // disposed in the update function.
-    // Default to false.
+    /**
+     * Whether the task is disposed. If true, the task will be removed from the ticker.
+     *
+     * This will be checked after done calling the update function, so the task can be
+     * disposed in the update function.
+     *
+     * Default to false.
+     */
     disposed?: boolean | (() => boolean);
-    // The dispose function of the task to be called when the task is removed from the ticker.
+    /**
+     * The dispose function of the task to be called when the task is removed from the ticker.
+     */
     dispose?: () => void;
 }
 
@@ -23,14 +37,14 @@ interface TickerTask {
  * The tasks will be sorted by their priority.
  */
 class TaskList {
-    private _tasks: TickerTask[] = [];
+    private tasks: TickerTask[] = [];
 
     valueOf() {
-        return this._tasks;
+        return this.tasks;
     }
 
     [Symbol.iterator]() {
-        return this._tasks[Symbol.iterator]();
+        return this.tasks[Symbol.iterator]();
     }
 
     /**
@@ -38,13 +52,13 @@ class TaskList {
      * @param task The task to be added.
      */
     add(task: TickerTask) {
-        let i = this._tasks.length;
-        while (i > 0 && this._tasks[i - 1].priority < task.priority) {
-            this._tasks[i] = this._tasks[i - 1];
+        let i = this.tasks.length;
+        while (i > 0 && this.tasks[i - 1].priority < task.priority) {
+            this.tasks[i] = this.tasks[i - 1];
             i--;
         }
 
-        this._tasks[i] = task;
+        this.tasks[i] = task;
     }
 
     /**
@@ -52,7 +66,7 @@ class TaskList {
      * @param task The task to be checked.
      * @returns Whether the task is disposed.
      */
-    private _isDisposed(task: TickerTask): boolean {
+    private isDisposed(task: TickerTask): boolean {
         switch (typeof task.disposed) {
             case "function": {
                 return (task.disposed as () => boolean)();
@@ -73,8 +87,8 @@ class TaskList {
      * This will call the dispose function of the task.
      */
     sweep() {
-        this._tasks = this._tasks.filter((task) => {
-            if (!this._isDisposed(task)) return true;
+        this.tasks = this.tasks.filter((task) => {
+            if (!this.isDisposed(task)) return true;
             if (typeof task.dispose === "function") task.dispose();
             return false;
         });
@@ -92,51 +106,56 @@ interface TickerInterface {
     stop(): void;
 }
 
+/**
+ * A ticker that executes tasks on each tick.
+ * The tasks will be executed in the order of their priority.
+ * After each tick, the ticker will emit a tick event with the changed blocks.
+ */
 class Ticker implements TickerInterface {
     static TPS = 10; // Ticks per second
     static TickDuration = 1000 / Ticker.TPS; // The duration of each tick, milliseconds
     tasks: TaskList; // The tasks to be executed on each tick.
     // The time when the instance of the ticker is started, milliseconds, from performance.now(). If null, the ticker is not started.
-    private _startTime: number | null = null;
+    private startTime: number | null = null;
     // The ID of the ticker. If null, the ticker is not running.
-    private _timeoutId: NodeJS.Timeout | number | null = null;
+    private timeoutId: NodeJS.Timeout | number | null = null;
 
     /**
      * @constructor
      */
     constructor() {
         this.tasks = new TaskList();
-        this._execute = this._execute.bind(this);
+        this.execute = this.execute.bind(this);
     }
 
     /**
      * Start the ticker.
      */
     start() {
-        if (this._startTime !== null) return;
+        if (this.startTime !== null) return;
 
-        this._startTime = performance.now();
-        this._execute();
+        this.startTime = performance.now();
+        this.execute();
     }
 
     /**
      * Stop the ticker.
      */
     stop() {
-        if (this._startTime === null) return;
+        if (this.startTime === null) return;
 
-        this._startTime = null;
-        clearTimeout(this._timeoutId!);
-        this._timeoutId = null;
+        this.startTime = null;
+        clearTimeout(this.timeoutId!);
+        this.timeoutId = null;
     }
 
     /**
      * Execute the tasks in each tick, and call the next tick's execute function.
      */
-    private _execute() {
-        this._runTasks();
-        this._timeoutId = setTimeout(
-            this._execute,
+    private execute() {
+        this.runTasks();
+        this.timeoutId = setTimeout(
+            this.execute,
             this.getMillisecondsUntilNextTick()!
         );
     }
@@ -144,7 +163,7 @@ class Ticker implements TickerInterface {
     /**
      * Run the tasks in each tick.
      */
-    private _runTasks() {
+    private runTasks() {
         const changedBlocks = new Set<BlockPos>();
 
         for (const task of this.tasks) {
@@ -169,10 +188,10 @@ class Ticker implements TickerInterface {
      * @returns The number of milliseconds until the next tick.
      */
     getMillisecondsUntilNextTick(): number | null {
-        if (this._startTime === null) return null;
+        if (this.startTime === null) return null;
         return (
             Ticker.TickDuration -
-            ((performance.now() - this._startTime) % Ticker.TickDuration)
+            ((performance.now() - this.startTime) % Ticker.TickDuration)
         );
     }
 }
