@@ -1,5 +1,8 @@
 import { eventBus } from "@/event-bus";
 
+/**
+ * Structure of the event data emitted by the KeyboardManager.
+ */
 type KeyEvent = {
     /**
      * The set of pressed keys.
@@ -41,9 +44,10 @@ class KeyboardManager {
     }
 
     /**
-     * Retrieves the singleton instance of the KeyboardManager class, creating it if it doesn't exist.
-     * @static
+     * Retrieves the singleton instance of the KeyboardManager class,
+     * creating it if it doesn't exist.
      * @returns The singleton instance of the KeyboardManager class.
+     * @static
      */
     static getInstance(): KeyboardManager {
         KeyboardManager.instance ||= new KeyboardManager();
@@ -51,9 +55,13 @@ class KeyboardManager {
     }
 
     /**
-     * Check whether the key is pressed.
-     * @param key The key string from the key event.
-     * @returns Whether the key is pressed.
+     * Determines whether the specified key is currently pressed.
+     *
+     * For single character keys (a-z, A-Z), both upper case
+     * and lower case versions are checked.
+     * @param key The key to check.
+     * @returns `true` if the key is pressed, `false` otherwise.
+     * @private
      */
     private isKeyPressed(key: string): boolean {
         if (key.length > 1 || key === " ") return this.pressedKeys.has(key);
@@ -71,8 +79,12 @@ class KeyboardManager {
     }
 
     /**
-     * Delete the key from the pressed keys.
-     * @param key The key to be deleted.
+     * Removes the specified key from the set of pressed keys.
+     *
+     * If the key is a single character, both its upper case
+     * and lower case versions are removed.
+     * @param key The key to be removed.
+     * @private
      */
     private deleteKey(key: string) {
         if (key.length > 1 || key === " ") {
@@ -91,7 +103,8 @@ class KeyboardManager {
     }
 
     /**
-     * Handle the keydown event.
+     * Handles the keydown event by adding the key to the pressed keys list
+     * and publishing a `keychange` event.
      * @param event The keydown event.
      * @private
      */
@@ -110,7 +123,8 @@ class KeyboardManager {
     }
 
     /**
-     * Handle the keyup event.
+     * Handles the keyup event by removing the key from the pressed keys list
+     * and publishing a `keychange` event.
      * @param event The keyup event.
      * @private
      */
@@ -126,7 +140,9 @@ class KeyboardManager {
     }
 
     /**
-     * Handle the visibility change event.
+     * Handles the visibility change event.
+     *
+     * If the document becomes hidden, it clears the list of pressed keys.
      * @private
      */
     private handleVisibilityChange() {
@@ -136,7 +152,7 @@ class KeyboardManager {
     }
 
     /**
-     * Clear the pressed keys.
+     * Clears the list of pressed keys and triggers a `keychange` event.
      * @private
      */
     private clearPressedKeys() {
@@ -145,7 +161,7 @@ class KeyboardManager {
     }
 
     /**
-     * Publish the "keychange" event.
+     * Triggers a `keychange` event with the current set of pressed keys.
      * @private
      */
     private publishKeyEvent() {
@@ -157,7 +173,8 @@ class KeyboardManager {
 
     /**
      * Start the keyboard manager.
-     * It listens to the keydown, keyup, and visibilitychange events.
+     *
+     * It listens to the `keydown`, `keyup`, and `visibilitychange` events.
      */
     start() {
         document.addEventListener("keydown", this.handleKeyDown);
@@ -171,7 +188,8 @@ class KeyboardManager {
 
     /**
      * Stop the keyboard manager.
-     * It removes the listeners of the keydown, keyup, and visibilitychange events.
+     *
+     * It removes the listeners of the `keydown`, `keyup`, and `visibilitychange` events.
      */
     stop() {
         this.clearPressedKeys();
