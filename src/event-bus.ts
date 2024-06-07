@@ -1,5 +1,6 @@
 /**
  * The structure of an event data object.
+ *
  * Notice that we use the `unknown` type for the values of the object,
  * which allows for flexibility in the structure of the event data.
  * This structure is used to define the data that is passed to the event handlers.
@@ -9,7 +10,7 @@ type EventData = {
 };
 
 /**
- * The structure of an event handler.
+ * Event handler function type.
  */
 type EventHandler = (event: EventData) => void | Promise<void>;
 
@@ -22,8 +23,15 @@ type EventHandler = (event: EventData) => void | Promise<void>;
  * @see {@link EventData} for the structure of the event data.
  * @see {@link EventHandler} for the structure of the event handler.
  */
+
 class EventBus {
+    /**
+     * The singleton instance of the event bus.
+     */
     private static _instance: EventBus;
+    /**
+     * The events and their corresponding handlers.
+     */
     private _events: { [key: string]: EventHandler[] } = {};
 
     /**
