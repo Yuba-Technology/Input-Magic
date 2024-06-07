@@ -118,7 +118,7 @@ class Dimension {
             }
         )
             .flat()
-            // Use `is` to tell TypeScript that we will remove all null values in the `filter` function.
+            // Use `is` to tell TypeScript that we will remove all `null` values in the `filter` function.
             .filter((chunk): chunk is Chunk => chunk !== null);
 
         return chunks;
