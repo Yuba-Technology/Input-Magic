@@ -17,7 +17,7 @@ describe("KeyboardManager2", () => {
         emitSpy.mockRestore();
     });
 
-    // *Note: Testing private methods like _execute and _runTasks directly is not recommended.
+    // *Note: Testing private methods directly is not recommended.
     // *Instead, you should test the public methods that use them, and check their effects.
     it("should start the keyboard manager properly", () => {
         const addEventListenerSpy = jest.spyOn(document, "addEventListener");
