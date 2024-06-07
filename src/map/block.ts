@@ -1,9 +1,5 @@
 /**
- * The position of a block in the world.
- * @typedef {Object} BlockPos
- * @property {number} x - The x-coordinate of the block.
- * @property {number} y - The y-coordinate of the block.
- * @property {number} z - The z-coordinate of the block.
+ * A block's position in the world.
  */
 type BlockPos = {
     x: number;
@@ -12,20 +8,13 @@ type BlockPos = {
 };
 
 /**
- * The interface for a block in the world.
- * @interface BlockInterface
- * @property {BlockPos} pos - The position of the block.
- * @property {string} type - The type of the block.
- */
-interface BlockInterface {
-    type: string; // The type of the block.
-}
-
-/**
  * A block in the world.
  * @class
  */
-class Block implements BlockInterface {
+class Block {
+    /**
+     * The type of the block.
+     */
     type: string;
 
     /**
@@ -38,4 +27,4 @@ class Block implements BlockInterface {
     }
 }
 
-export { Block, BlockInterface, BlockPos };
+export { Block, BlockPos };

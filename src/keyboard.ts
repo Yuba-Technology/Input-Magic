@@ -1,23 +1,40 @@
 import { eventBus } from "@/event-bus";
 
+/**
+ * Structure of the event data emitted by the KeyboardManager.
+ */
 type KeyEvent = {
-    pressedKeys: Set<string>; // The set of pressed keys.
+    /**
+     * The set of pressed keys.
+     */
+    pressedKeys: Set<string>;
 };
 
 /**
- * The `KeyboardManager` is responsible for managing keyboard events.
- * It emits a "keychange" event whenever there is a change in the keys being pressed or released.
- * The event data is encapsulated in a `KeyEvent` object.
- * Please note that this class is primarily intended for handling in-game keyboard events,
- * and is not designed for handling input fields.
+ * Manages keyboard events for in-game interactions.
+ * Emits a "keychange" event on key press or release, encapsulated in a `KeyEvent` object.
+ * Not intended for handling input fields.
  *
- * @see {@link KeyEvent} for the structure of the event data.
- * @see {@link eventBus} for the event handling system used.
+ * @see {@link KeyEvent} - Structure of the event data.
+ * @see {@link eventBus} - Event handling system used.
  */
 class KeyboardManager {
-    useLowerCase: boolean = true; // Whether to use lower case for the single character keys.
-    private static instance: KeyboardManager; // The singleton instance of the keyboard manager.
-    private pressedKeys: Set<string> = new Set(); // The set of pressed keys.
+    /**
+     * Singleton instance of the KeyboardManager class.
+     * @static
+     */
+    private static instance: KeyboardManager;
+    /**
+     * Determines if single character keys should be converted to lower case.
+     *
+     * Default to `true`.
+     */
+    useLowerCase: boolean = true;
+    /**
+     * Set of currently pressed keys.
+     * @private
+     */
+    private pressedKeys: Set<string> = new Set();
 
     constructor() {
         // Bind this to the event handlers
@@ -27,8 +44,10 @@ class KeyboardManager {
     }
 
     /**
-     * Get the singleton instance of the keyboard manager.
-     * @returns The singleton instance of the keyboard manager.
+     * Retrieves the singleton instance of the KeyboardManager class,
+     * creating it if it doesn't exist.
+     * @returns The singleton instance of the KeyboardManager class.
+     * @static
      */
     static getInstance(): KeyboardManager {
         KeyboardManager.instance ||= new KeyboardManager();
@@ -36,13 +55,21 @@ class KeyboardManager {
     }
 
     /**
-     * Check whether the key is pressed.
-     * @param key The key to be checked.
-     * @returns Whether the key is pressed.
+     * Determines whether the specified key is currently pressed.
+     *
+     * For single character keys (a-z, A-Z), both upper case
+     * and lower case versions are checked.
+     * @param key The key to check.
+     * @returns `true` if the key is pressed, `false` otherwise.
+     * @private
      */
     private isKeyPressed(key: string): boolean {
         if (key.length > 1 || key === " ") return this.pressedKeys.has(key);
 
+        // Both upper case and lower case are checked for
+        // single character keys a-z and A-Z.
+        // Because when the shift key is pressed, the key event
+        // will return the upper case character.
         const keyUpper = key.toUpperCase();
         const keyLower = key.toLowerCase();
 
@@ -52,15 +79,22 @@ class KeyboardManager {
     }
 
     /**
-     * Delete the key from the pressed keys.
-     * @param key The key to be deleted.
+     * Removes the specified key from the set of pressed keys.
+     *
+     * If the key is a single character, both its upper case
+     * and lower case versions are removed.
+     * @param key The key to be removed.
+     * @private
      */
     private deleteKey(key: string) {
         if (key.length > 1 || key === " ") {
+            // Not single character key
             this.pressedKeys.delete(key);
             return;
         }
 
+        // Delete both upper case and lower case keys.
+        // See the comment in the isKeyPressed method.
         const keyUpper = key.toUpperCase();
         const keyLower = key.toLowerCase();
 
@@ -69,16 +103,19 @@ class KeyboardManager {
     }
 
     /**
-     * Handle the keydown event.
+     * Handles the keydown event by adding the key to the pressed keys list
+     * and publishing a `keychange` event.
      * @param event The keydown event.
      * @private
      */
     private handleKeyDown(event: KeyboardEvent) {
         event.preventDefault();
+
+        // Prevent duplicate publishing of the same keychange event.
         if (this.isKeyPressed(event.key)) return;
 
         const key =
-            this.useLowerCase && event.key.length === 1 && event.key !== " "
+            this.useLowerCase && event.key.length === 1 && event.key !== " " // Single character key a-z and A-Z
                 ? event.key.toLowerCase()
                 : event.key;
         this.pressedKeys.add(key);
@@ -86,7 +123,8 @@ class KeyboardManager {
     }
 
     /**
-     * Handle the keyup event.
+     * Handles the keyup event by removing the key from the pressed keys list
+     * and publishing a `keychange` event.
      * @param event The keyup event.
      * @private
      */
@@ -102,7 +140,9 @@ class KeyboardManager {
     }
 
     /**
-     * Handle the visibility change event.
+     * Handles the visibility change event.
+     *
+     * If the document becomes hidden, it clears the list of pressed keys.
      * @private
      */
     private handleVisibilityChange() {
@@ -112,7 +152,7 @@ class KeyboardManager {
     }
 
     /**
-     * Clear the pressed keys.
+     * Clears the list of pressed keys and triggers a `keychange` event.
      * @private
      */
     private clearPressedKeys() {
@@ -121,7 +161,7 @@ class KeyboardManager {
     }
 
     /**
-     * Publish the "keychange" event.
+     * Triggers a `keychange` event with the current set of pressed keys.
      * @private
      */
     private publishKeyEvent() {
@@ -133,11 +173,13 @@ class KeyboardManager {
 
     /**
      * Start the keyboard manager.
-     * It listens to the keydown, keyup, and visibilitychange events.
+     *
+     * It listens to the `keydown`, `keyup`, and `visibilitychange` events.
      */
     start() {
         document.addEventListener("keydown", this.handleKeyDown);
         document.addEventListener("keyup", this.handleKeyUp);
+        // Clear the pressed keys when the tab or the broswer is hidden
         document.addEventListener(
             "visibilitychange",
             this.handleVisibilityChange
@@ -146,7 +188,8 @@ class KeyboardManager {
 
     /**
      * Stop the keyboard manager.
-     * It removes the listeners of the keydown, keyup, and visibilitychange events.
+     *
+     * It removes the listeners of the `keydown`, `keyup`, and `visibilitychange` events.
      */
     stop() {
         this.clearPressedKeys();
