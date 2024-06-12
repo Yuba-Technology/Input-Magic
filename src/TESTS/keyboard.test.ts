@@ -17,7 +17,7 @@ describe("KeyboardManager2", () => {
         emitSpy.mockRestore();
     });
 
-    // *Note: Testing private methods like _execute and _runTasks directly is not recommended.
+    // *Note: Testing private methods directly is not recommended.
     // *Instead, you should test the public methods that use them, and check their effects.
     it("should start the keyboard manager properly", () => {
         const addEventListenerSpy = jest.spyOn(document, "addEventListener");
@@ -89,7 +89,7 @@ describe("KeyboardManager2", () => {
         }
     });
 
-    it("should add lowercase key to pressedKeys set if `useLowerCase` is true", () => {
+    it("should add lowercase key to pressedKeys set if `useLowerCase` is `true`", () => {
         keyboardManager.useLowerCase = true;
         keyboardManager.start();
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "A" }));
@@ -104,7 +104,7 @@ describe("KeyboardManager2", () => {
         }
     });
 
-    it("should add original case key to pressedKeys set if `useLowerCase` is false", () => {
+    it("should add original case key to pressedKeys set if `useLowerCase` is `false`", () => {
         keyboardManager.useLowerCase = false;
         keyboardManager.start();
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "A" }));

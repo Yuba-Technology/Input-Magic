@@ -57,7 +57,7 @@ describe("Ticker", () => {
         jest.useRealTimers();
     });
 
-    // *Note: Testing private methods like _execute and _runTasks directly is not recommended.
+    // *Note: Testing private methods like execute and runTasks directly is not recommended.
     // *Instead, you should test the public methods that use them, and check their effects.
     it("should initialize correctly", () => {
         expect(ticker).toBeDefined();

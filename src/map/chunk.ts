@@ -5,11 +5,7 @@ const CHUNK_SIZE = 16;
 const CHUNK_HEIGHT = 16;
 
 /**
- * Relative block position inside a chunk
- * @typedef {Object} RelativeBlockPos
- * @property {number} x - The relative x-coordinate of the block.
- * @property {number} y - The relative y-coordinate of the block.
- * @property {number} z - The relative z-coordinate of the block.
+ * Relative block position inside a chunk.
  */
 type RelativeBlockPos = {
     x: number;
@@ -19,9 +15,6 @@ type RelativeBlockPos = {
 
 /**
  * The position of a chunk in the world.
- * @typedef {Object} ChunkPos
- * @property {number} x - The x-coordinate of the chunk.
- * @property {number} y - The y-coordinate of the chunk.
  */
 type ChunkPos = {
     x: number;
@@ -30,46 +23,47 @@ type ChunkPos = {
 
 /**
  * The configuration for a chunk in the world.
- * @typedef {Object} ChunkConfig
- * @property {ChunkPos} pos - The position of the chunk.
- * @property {Block[][][]} blocks - The blocks in the chunk.
- * @property {Entity[]} entities - The entities in the chunk.
  */
 type ChunkConfig = {
+    /**
+     * The position of the chunk.
+     */
     pos: ChunkPos;
+    /**
+     * The blocks in the chunk.
+     */
     blocks: Block[][][];
+    /**
+     * The entities in the chunk.
+     */
     entities?: Entity[];
 };
-
-/**
- * The interface for a chunk in the world.
- * @interface ChunkInterface
- * @property {ChunkPos} pos - The position of the chunk.
- * @property {Block[][][]} blocks - The blocks in the chunk.
- * @property {Entity[]} entities - The entities in the chunk.
- * @method absoluteToRelativePosition - Convert an absolute position to a relative position inside the chunk.
- * @method relativeToAbsolutePosition - Convert a relative position inside the chunk to an absolute position.
- * @extends {ChunkConfig}
- */
-interface ChunkInterface {
-    pos: ChunkPos;
-    blocks: Block[][][];
-    entities: Entity[];
-    absoluteToRelativePosition(pos: BlockPos): RelativeBlockPos;
-    relativeToAbsolutePosition(pos: RelativeBlockPos): BlockPos;
-}
 
 /**
  * A chunk in the world.
  * @class
  * @implements {ChunkInterface}
- * @extends {ChunkConfig}
  */
-class Chunk implements ChunkInterface {
+class Chunk {
+    /**
+     * The size of the chunk, x length and y length.
+     */
     static SIZE = CHUNK_SIZE;
+    /**
+     * The height of the chunk, z length.
+     */
     static HEIGHT = CHUNK_HEIGHT;
+    /**
+     * The position of the chunk.
+     */
     pos: ChunkPos;
+    /**
+     * The blocks in the chunk.
+     */
     blocks: Block[][][];
+    /**
+     * The entities in the chunk.
+     */
     entities: Entity[];
 
     /**
@@ -114,4 +108,4 @@ class Chunk implements ChunkInterface {
     }
 }
 
-export { Chunk, ChunkInterface, ChunkPos, ChunkConfig };
+export { Chunk, ChunkPos, ChunkConfig };
