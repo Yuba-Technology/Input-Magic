@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   issue-labeled:
+    if: github.repository == 'Yuba-Technology/Input-Magic'
     permissions:
       # allow actions-cool/issues-helper to update issues and PRs
       issues: write

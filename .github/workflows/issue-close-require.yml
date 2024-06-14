@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   issue-close-require:
+    if: github.repository == 'Yuba-Technology/Input-Magic'
     runs-on: ubuntu-latest
     steps:
       - name: awaiting reply
