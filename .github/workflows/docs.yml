@@ -1,0 +1,40 @@
+name: Docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-wiki:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check out wiki repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}.wiki
+          path: .wiki
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Copy docs to wiki
+        run: |
+          cp -r docs/* .wiki/
+
+      - name: Push changes
+        run: |
+          cd .wiki
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update wiki from `docs` directory"
+          git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git"
