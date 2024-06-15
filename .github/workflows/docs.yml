@@ -9,11 +9,13 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   update-wiki:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -28,6 +30,7 @@ jobs:
 
       - name: Copy docs to wiki
         run: |
+          rm -rf .wiki/*
           cp -r docs/* .wiki/
 
       - name: Push changes

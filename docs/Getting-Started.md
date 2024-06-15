@@ -80,6 +80,6 @@ If everything is set up correctly, you should see a browser window open with the
 
 Now that you've got _Input Magic_ up and running, you're all set to dive into the codebase and start making your mark. If you're new around here, we recommend starting with the [Contributing Guidelines](https://github.com/Yuba-Technology/Input-Magic/blob/main/.github/CONTRIBUTING.md).
 
-We'll be delving into deeper concepts in the upcoming chapters, so stick around!
+We'll be delving into deeper concepts in the upcoming chapters. In the [next chapter](https://github.com/Yuba-Technology/Input-Magic/wiki/Prebuilt-Commands), we'll introduce some prebuilt commands in `package.json` that will facilitate your development process. So, stick around!
 
 Got questions or need a helping hand? Don't hesitate to reach out to us on the [Discussions](https://github.com/Yuba-Technology/Input-Magic/discussions) page.
