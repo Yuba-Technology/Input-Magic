@@ -28,6 +28,7 @@ jobs:
 
       - name: Copy docs to wiki
         run: |
+          rm -rf .wiki/*
           cp -r docs/* .wiki/
 
       - name: Push changes
