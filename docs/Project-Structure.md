@@ -1,6 +1,6 @@
 In this chapter, we aim to provide an in-depth look at the project structure, detailing how different components interact to create a dynamic and immersive gaming experience.
 
-### Project Structure
+## Project Structure
 
 The project is divided into three main layers: the Interact Layer, Data Layer, and Rendering Layer. These layers work together to handle player input, manage game data, and render the game state, respectively.
 
@@ -10,7 +10,7 @@ The project is divided into three main layers: the Interact Layer, Data Layer, a
 
 Each layer has its own set of responsibilities and communicates with the others through an event bus, ensuring efficient transmission of information and control signals.
 
-#### Core Components
+### Core Components
 
 - **Event Bus**: Facilitates communication between the different layers.
 - **Game Ticks**: Divided into scheduled ticks and random ticks, they handle fixed-frequency tasks and random events.
@@ -19,7 +19,7 @@ Each layer has its own set of responsibilities and communicates with the others 
 
 In the following sections, we will delve deeper into each layer and component, providing a comprehensive understanding of the project's structure.
 
-#### Project Structure Diagram
+### Project Structure Diagram
 
 ```mermaid
 graph TD
@@ -63,7 +63,7 @@ C -.->|"Tick Data
 in this tick)"| E
 ```
 
-### Project Architecture
+## Project Architecture
 
 1. **Rendering Layer**:
 
@@ -85,7 +85,7 @@ in this tick)"| E
    - **Modules**: Includes input processing, event management, etc.
    - **Key Path**: `src/control/`
 
-### Module Interaction
+## Module Interaction
 
 The game's architecture uses an event bus to facilitate communication between the three core layers: the Rendering Layer, Data Layer, and Interact Layer. The event bus ensures efficient transmission of control signals and data between these layers.
 
@@ -101,7 +101,7 @@ The **Event Bus** transmits the following types of data:
 
 This design ensures effective interaction between layers, enabling real-time responsiveness and smooth data processing.
 
-### Detailed Architecture
+## Detailed Architecture
 
 In this section, we provided an overview of the project's architecture and its core features, laying the foundation for deeper understanding and development. In the following chapters, we will delve into the specific mechanisms and implementation details of each layer.
 
