@@ -4,13 +4,6 @@ In this chapter, we aim to provide an in-depth look at the project structure, de
 
 The project is divided into three main layers: the Interact Layer, Data Layer, and Rendering Layer. These layers work together to handle player input, manage game data, and render the game state, respectively.
 
-## Core Components
-
-- **Event Bus**: Facilitates communication between the different layers.
-- **Game Ticks**: Divided into scheduled ticks and random ticks, they handle fixed-frequency tasks and random events.
-- **Data Storage**: Manages all game data storage and retrieval.
-- **Event Queue**: Collects events generated from player actions or internal game logic for processing.
-
 Each layer has its own set of responsibilities and communicates with the others through an event bus, ensuring efficient transmission of information and control signals.
 
 ## Project Structure Diagram
@@ -29,7 +22,7 @@ and Update State
 (Run tick tasks)"]
 subgraph Data
 D[Storage]
-J[Queue]
+J[Event Queue]
 end
 H[Timer]
 I[Data Extraction]
@@ -70,11 +63,11 @@ in this tick)"| E
 
    - **Function**: Handles all game data, including the execution of game ticks, block updates, entity AI calculations, and data storage.
    - **Modules**: Game logic processing, physics calculations, state management, and data storage.
-   - **Game Ticks**:
-     - **Scheduled Ticks**: Executes every 100 milliseconds (0.1 seconds), handling tasks such as block updates and entity movements.
+   - **Game Ticks**: Divided into two types:
+     - **Scheduled Ticks**: Triggered every 100 milliseconds (0.1 seconds) by a timer. This mechanism is responsible for managing operations such as block updates and entity movements.
      - **Random Ticks**: In each scheduled tick, randomly selects a block in each chunk to handle random events.
-   - **Data Storage**: Manages all game data storage and retrieval.
-   - **Event Queue**: Collects events generated from player actions or internal game logic for processing.
+   - **Data Storage**: Stores game data, including player information, world data, entity data, etc.
+   - **Event Queue**: Collects events generated from player actions or internal game logic for processing. These events are processed by the next scheduled tick.
 
 3. **Interact Layer**:
    - **Function**: Receives player inputs (keyboard events) and responds by sending commands to the Data Layer and directly triggering the Rendering Layer for immediate updates.
