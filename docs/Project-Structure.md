@@ -51,7 +51,9 @@ G[Render Screen]
 E --> F
 F --> G
 G -.->|Data Request| D
-D -->|Provide Data| E
+D -->|Provide
+Requestd
+Data| E
 end
 
 B -.->|Player Action| I
