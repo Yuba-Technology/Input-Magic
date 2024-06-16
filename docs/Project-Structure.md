@@ -1,25 +1,21 @@
+### In-Depth Project Overview
+
 In this chapter, we aim to provide an in-depth look at the project structure, detailing how different components interact to create a dynamic and immersive gaming experience.
 
-### Project Structure
+## Layers
 
 The project is divided into three main layers: the Interact Layer, Data Layer, and Rendering Layer. These layers work together to handle player input, manage game data, and render the game state, respectively.
 
-- **Interact Layer**: Receives and processes player input.
-- **Data Layer**: Handles game logic, updates the game state, and manages data storage.
-- **Rendering Layer**: Renders the game state into a 2D view for the player.
-
-Each layer has its own set of responsibilities and communicates with the others through an event bus, ensuring efficient transmission of information and control signals.
-
-#### Core Components
+### Core Components
 
 - **Event Bus**: Facilitates communication between the different layers.
 - **Game Ticks**: Divided into scheduled ticks and random ticks, they handle fixed-frequency tasks and random events.
 - **Data Storage**: Manages all game data storage and retrieval.
 - **Event Queue**: Collects events generated from player actions or internal game logic for processing.
 
-In the following sections, we will delve deeper into each layer and component, providing a comprehensive understanding of the project's structure.
+Each layer has its own set of responsibilities and communicates with the others through an event bus, ensuring efficient transmission of information and control signals.
 
-#### Project Structure Diagram
+## Project Structure Diagram
 
 ```mermaid
 graph TD
@@ -35,7 +31,7 @@ and Update State
 (Run tick tasks)"]
 subgraph Data
 D[Storage]
-J[Quene]
+J[Queue]
 end
 H[Timer]
 I[Data Extraction]
@@ -51,7 +47,9 @@ G[Render Screen]
 E --> F
 F --> G
 G -.->|Data Request| D
-D -->|Provide Data| E
+D -->|Provide
+Requested
+Data| E
 end
 
 B -.->|Player Action| I
@@ -63,33 +61,33 @@ C -.->|"Tick Data
 in this tick)"| E
 ```
 
-### Project Architecture
+## Detailed Architecture
 
 1. **Rendering Layer**:
 
-   - **Function**: Responsible for rendering the data provided by the Data Layer into a 2D view, displaying the game state to the player. The Rendering Layer also actively requests necessary data (e.g., chunk data) from the Data Storage within the Data Layer.
-   - **Modules**: Includes the rendering engine, graphics processing, UI display, etc.
+   - **Function**: Renders the game state into a 2D view for the player. It requests necessary data (e.g., chunk data) from the Data Storage within the Data Layer.
+   - **Modules**: Rendering engine, graphics processing, UI display, etc.
 
 2. **Data Layer**:
 
-   - **Function**: Handles all game data, including the execution of game ticks, block updates, entity AI calculations, etc. The Data Layer also manages the data storage, ensuring that all data-related operations go through the Data Storage module.
-   - **Modules**: Includes game logic processing, physics calculations, state management, and data storage.
+   - **Function**: Handles all game data, including the execution of game ticks, block updates, entity AI calculations, and data storage.
+   - **Modules**: Game logic processing, physics calculations, state management, and data storage.
    - **Game Ticks**:
      - **Scheduled Ticks**: Executes every 100 milliseconds (0.1 seconds), handling tasks such as block updates and entity movements.
      - **Random Ticks**: In each scheduled tick, randomly selects a block in each chunk to handle random events.
-   - **Data Storage**: This module manages all game data storage and retrieval, ensuring consistent and efficient data access.
+   - **Data Storage**: Manages all game data storage and retrieval.
    - **Event Queue**: Collects events generated from player actions or internal game logic for processing.
 
 3. **Interact Layer**:
    - **Function**: Receives player inputs (keyboard events) and responds by sending commands to the Data Layer and directly triggering the Rendering Layer for immediate updates.
-   - **Modules**: Includes input processing, event management, etc.
+   - **Modules**: Input processing, event management, etc.
    - **Key Path**: `src/control/`
 
-### Module Interaction
+## Module Interaction
 
 The game's architecture uses an event bus to facilitate communication between the three core layers: the Rendering Layer, Data Layer, and Interact Layer. The event bus ensures efficient transmission of control signals and data between these layers.
 
-The **Event Bus** transmits the following types of data:
+The Event Bus transmits the following types of data:
 
 - **Control Flow**:
   - The Interact Layer sends control signals to the Data Layer, e.g., when the player moves.
@@ -101,8 +99,6 @@ The **Event Bus** transmits the following types of data:
 
 This design ensures effective interaction between layers, enabling real-time responsiveness and smooth data processing.
 
-### Detailed Architecture
+## Conclusion
 
-In this section, we provided an overview of the project's architecture and its core features, laying the foundation for deeper understanding and development. In the following chapters, we will delve into the specific mechanisms and implementation details of each layer.
-
-By understanding the design of Input-Magic, you’re now equipped to dive deeper. Just like a wizard learns the basics of spellcasting before tackling more complex enchantments, tet's get ready to delve into the architecture of our game!
+In this section, we provided an overview of the project's architecture and its core features, laying the foundation for deeper understanding and development. By understanding the design of Input-Magic, you’re now equipped to dive deeper. Just like a wizard learns the basics of spellcasting before tackling more complex enchantments, let's get ready to explore the detailed architecture of our game in the following chapters!
