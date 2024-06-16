@@ -1,6 +1,6 @@
 Welcome! In this chapter, we will guide you to install and run Input Magic on your computer, and give you a basic understanding of this project.
 
-## Project Structure
+## Project Directory Structure
 
 In the structure outlined below, we've highlighted some of the **key files and directories** within the project that you should focus on. However, this doesn't imply that the other files are of any less importance. Every file in the project serves a specific purpose and contributes to the overall functionality of the application.
 
