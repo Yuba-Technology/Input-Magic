@@ -1,12 +1,10 @@
-### In-Depth Project Overview
-
 In this chapter, we aim to provide an in-depth look at the project structure, detailing how different components interact to create a dynamic and immersive gaming experience.
 
 ## Layers
 
 The project is divided into three main layers: the Interact Layer, Data Layer, and Rendering Layer. These layers work together to handle player input, manage game data, and render the game state, respectively.
 
-### Core Components
+## Core Components
 
 - **Event Bus**: Facilitates communication between the different layers.
 - **Game Ticks**: Divided into scheduled ticks and random ticks, they handle fixed-frequency tasks and random events.
