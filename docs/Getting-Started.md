@@ -19,7 +19,7 @@ Input-Magic
 ├─public # Copied to dist on build
 ├─src
 │   └─**/*.ts # Source code
-│      └─TESTS/*.ts # Test files
+│      └─TESTS/*.test.ts # Test files
 ├─CODE_OF_CONDUCT.md
 ├─LICENSE
 ├─README.md
