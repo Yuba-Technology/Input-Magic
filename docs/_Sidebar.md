@@ -1,9 +1,18 @@
 ### [Home](https://github.com/Yuba-Technology/Input-Magic/wiki)
 
-### [Getting Started](https://github.com/Yuba-Technology/Input-Magic/wiki/Getting-Started)
+### Getting Started
 
-### [Prebuilt Commands](https://github.com/Yuba-Technology/Input-Magic/wiki/Prebuilt-Commands)
+- #### [Installation](https://github.com/Yuba-Technology/Input-Magic/wiki/Installation)
+- #### [Prebuilt Commands](https://github.com/Yuba-Technology/Input-Magic/wiki/Prebuilt-Commands)
 
-### [Project Structure](https://github.com/Yuba-Technology/Input-Magic/wiki/Project-Structure)
+### Project Guides
 
-### [FAQ](https://github.com/Yuba-Technology/Input-Magic/wiki/FAQ)
+- #### [Project Structure](https://github.com/Yuba-Technology/Input-Magic/wiki/Project-Structure)
+
+### Help & Support
+
+- #### [FAQ](https://github.com/Yuba-Technology/Input-Magic/wiki/FAQ)
+
+<!-- - #### [Troubleshooting] -->
+
+- #### [Contributing](https://github.com/Yuba-Technology/Input-Magic/blob/main/.github/CONTRIBUTING.md)
