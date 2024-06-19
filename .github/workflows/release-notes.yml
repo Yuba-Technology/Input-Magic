@@ -18,6 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'Yuba-Technology/Input-Magic'
     steps:
-      - uses: release-drafter/release-drafter@v6
+      - uses: release-drafter/release-drafter@3f0f87098bd6b5c5b9a36d49c41d998ea58f9348 # v6.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.BG_TOKEN }}
