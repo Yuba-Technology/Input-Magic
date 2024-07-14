@@ -37,6 +37,7 @@
     },
     "homepage": "https://github.com/Yuba-Technology/Input-Magic#readme",
     "devDependencies": {
+        "@types/deep-equal": "^1.0.4",
         "@types/jest": "^29.5.12",
         "@typescript-eslint/eslint-plugin": "^7.14.1",
         "babel-loader": "^9.1.3",
@@ -77,6 +78,7 @@
         "webpack-merge": "^5.10.0"
     },
     "dependencies": {
+        "deep-equal": "^2.2.3",
         "node-fetch": "^3.3.2",
         "pixi.js": "^8.2.1"
     }
