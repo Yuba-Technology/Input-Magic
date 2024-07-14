@@ -31,6 +31,10 @@ class BUD implements TickerTask {
      * The queue of blocks to be updated in the next tick. It also contains the blocks that have a delay.
      */
     private nextQueue: Set<BudData> = new Set();
+    /**
+     * The updated block positions.
+     */
+    private updatedBlockPos: Set<BlockPos> = new Set();
 
     /**
      * Get the singleton instance of the BUD.
@@ -43,9 +47,12 @@ class BUD implements TickerTask {
     /**
      * Add a block to the queue.
      * @param data The data to be added to the queue.
+     * @param skipIfUpdated If this pos already updated in this tick, don't add it to the queue. Defaults to `true`.
      */
-    add(data: BudData): void {
+    add(data: BudData, skipIfUpdated = true): void {
         if (elementInSet(data, this.nextQueue)) return;
+        if (skipIfUpdated && elementInSet(data.pos, this.updatedBlockPos))
+            return;
 
         this.nextQueue.add(data);
     }
@@ -55,10 +62,11 @@ class BUD implements TickerTask {
      */
     private prepareQueue(): void {
         this.queue = [];
+        this.updatedBlockPos = new Set();
 
         for (const data of this.nextQueue) {
             // !No break here! We need to update all the delays here in the `nextQueue`!
-            if (data.delay && --data.delay > 0) continue;
+            if (data.delay && data.delay-- > 0) continue;
             if (this.queue.length >= BUD.QUEUE_MAX_LENGTH) continue;
             this.queue.push(data);
             this.nextQueue.delete(data);
@@ -68,8 +76,8 @@ class BUD implements TickerTask {
         // 1. task priority
         // 2. pos (x, y, z)
         this.queue.sort((a, b) => {
-            if (a.type !== b.type) return a.type - b.type;
-            if (a.pos.x !== b.pos.x) return a.pos.x - b.pos.x;
+            if (a.type !== b.type) return b.type - a.type; // higher type first
+            if (a.pos.x !== b.pos.x) return a.pos.x - b.pos.x; // lower pos first
             if (a.pos.y !== b.pos.y) return a.pos.y - b.pos.y;
             return a.pos.z - b.pos.z;
         });
@@ -85,12 +93,20 @@ class BUD implements TickerTask {
             BudHandlerFactory.getHandlerByType(bud.type).handleBud(bud);
         }
 
-        const updatedBlockPos = new Set<BlockPos>();
         for (const bud of this.queue) {
-            updatedBlockPos.add(bud.pos);
+            this.updatedBlockPos.add(bud.pos);
         }
 
-        return updatedBlockPos;
+        return this.updatedBlockPos;
+    }
+
+    /**
+     * Clear the BUD queue.
+     */
+    clear(): void {
+        this.queue = [];
+        this.nextQueue = new Set();
+        this.updatedBlockPos = new Set();
     }
 }
 
