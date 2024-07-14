@@ -84,4 +84,4 @@ class EventBus {
 
 const eventBus = EventBus.getInstance();
 
-export { eventBus, EventHandler };
+export { eventBus, EventData, EventHandler };
