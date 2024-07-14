@@ -1,4 +1,5 @@
-import { Ticker, TaskList } from "@/tick";
+import { TickerConfig } from "@/tick/config";
+import { ticker, TaskList } from "@/tick/tick";
 import { eventBus } from "@/event-bus";
 
 describe("TaskManager", () => {
@@ -46,14 +47,13 @@ describe("TaskManager", () => {
 });
 
 describe("Ticker", () => {
-    let ticker: Ticker;
-
     beforeEach(() => {
         jest.useFakeTimers();
-        ticker = new Ticker();
     });
 
     afterEach(() => {
+        ticker.stop();
+        ticker.tasks.clear();
         jest.useRealTimers();
     });
 
@@ -83,14 +83,14 @@ describe("Ticker", () => {
 
         const totalTicks = 10000;
         for (let i = 1; i <= totalTicks; i++) {
-            jest.advanceTimersByTime(Ticker.TickDuration);
+            jest.advanceTimersByTime(TickerConfig.TickDuration);
         }
 
         const callTimes = mockTask.update.mock.invocationCallOrder;
         expect(callTimes.length).toBeCloseTo(totalTicks + 1, -2); // allow 2 digits of tolerance
     });
 
-    it("should emit a tick event on each tick", () => {
+    it("should emit a ticker:tick event on each tick", () => {
         // Prepare a task that updates the blocks
         const testBlocks = new Set([
             { x: 0, y: 0, z: 0 },
@@ -106,7 +106,7 @@ describe("Ticker", () => {
         ticker.tasks.add(blockChanger);
 
         // Subscribe to the tick event
-        eventBus.on("tick", mockHandler);
+        eventBus.on("ticker:tick", mockHandler);
 
         // Start the ticker
         ticker.start();
@@ -115,5 +115,15 @@ describe("Ticker", () => {
         expect(mockHandler.mock.calls[0][0]).toEqual({
             changedBlocks: testBlocks
         });
+    });
+
+    it("should add a task when receiving a 'ticker:register' event", () => {
+        const mockTask = {
+            priority: 1,
+            update: jest.fn()
+        };
+
+        eventBus.emit("ticker:register", { task: mockTask });
+        expect(ticker.tasks).toContain(mockTask);
     });
 });

@@ -1,46 +1,8 @@
+import { elementInSet } from "../utils";
+import { eventBus, EventData } from "@/event-bus";
 import { BlockPos } from "@/map/block";
-import { eventBus } from "@/event-bus";
-
-type TickEventData = {
-    /**
-     * The set of blocks that have changed during the tick.
-     */
-    changedBlocks: Set<BlockPos>;
-};
-
-/**
- * A task to be executed on each tick.
- */
-interface TickerTask {
-    /**
-     * The priority of the task. The higher the number, the higher the priority.
-     */
-    readonly priority: number;
-    /**
-     * Whether the task is disposed. If `true`, the task will be removed from the ticker.
-     *
-     * This will be checked after done calling the update function, so the task can be
-     * disposed in the update function.
-     *
-     * Default to `false`.
-     */
-    disposed?: boolean | (() => boolean);
-    /**
-     * The update function of the task to be called on each tick.
-     *
-     * The function should return the positions of the blocks that has been changed and
-     * may affect the rendering of the map.
-     *
-     * If not empty, the renderer will calculate
-     * whether the screen (or exactly the canvas) needs to be updated.
-     * @returns The positions of the blocks that has been changed and may affect the rendering of the map.
-     */
-    update: () => Set<BlockPos> | void;
-    /**
-     * The dispose function of the task to be called when the task is removed from the ticker.
-     */
-    dispose?: () => void;
-}
+import { TickerTask, TickerTaskEventData } from "@/tick/types";
+import { TickerConfig } from "@/tick/config";
 
 /**
  * A list of tasks to be executed on each tick.
@@ -101,6 +63,13 @@ class TaskList {
             return false;
         });
     }
+
+    /**
+     * Clears all tasks from the list.
+     */
+    clear() {
+        this.tasks = [];
+    }
 }
 
 /**
@@ -115,17 +84,13 @@ class TaskList {
  */
 class Ticker {
     /**
-     * Ticks per second.
-     */
-    static TPS = 10;
-    /**
-     * The duration of each tick, milliseconds.
-     */
-    static TickDuration = 1000 / Ticker.TPS;
-    /**
      * The tasks to be executed on each tick.
      */
     tasks: TaskList;
+    /**
+     * The singleton instance of the ticker.
+     */
+    private static instance: Ticker;
     /**
      * The start time of the ticker instance in milliseconds.
      *
@@ -150,6 +115,11 @@ class Ticker {
     constructor() {
         this.tasks = new TaskList();
         this.execute = this.execute.bind(this);
+    }
+
+    static getInstance(): Ticker {
+        Ticker.instance ||= new Ticker();
+        return Ticker.instance;
     }
 
     /**
@@ -199,6 +169,7 @@ class Ticker {
 
             // Add the changed blocks to the set of changed blocks.
             for (const blockPos of changedBlocksInTask) {
+                if (elementInSet(blockPos, changedBlocks)) continue;
                 changedBlocks.add(blockPos);
             }
         }
@@ -207,7 +178,7 @@ class Ticker {
         this.tasks.sweep();
 
         // Emit the tick event.
-        eventBus.emit("tick", { changedBlocks });
+        eventBus.emit("ticker:tick", { changedBlocks });
     }
 
     /**
@@ -217,10 +188,17 @@ class Ticker {
     getMillisecondsUntilNextTick(): number | null {
         if (this.startTime === null) return null;
         return (
-            Ticker.TickDuration -
-            ((performance.now() - this.startTime) % Ticker.TickDuration)
+            TickerConfig.TickDuration -
+            ((performance.now() - this.startTime) % TickerConfig.TickDuration)
         );
     }
 }
 
-export { Ticker, TickerTask, TaskList, TickEventData };
+const ticker = Ticker.getInstance();
+
+eventBus.on("ticker:register", (data: EventData) => {
+    const { task } = data as TickerTaskEventData;
+    ticker.tasks.add(task);
+});
+
+export { ticker, TaskList };
