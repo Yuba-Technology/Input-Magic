@@ -1,5 +1,5 @@
 import { BudType, BudUpdater } from "@/bud/types";
-import NormalUpdate from "@/bud/normal";
+import { NormalUpdate } from "@/bud/normal";
 
 const handlers: { [key: string]: BudUpdater } = {
     normal: new NormalUpdate()

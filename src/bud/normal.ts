@@ -3,7 +3,7 @@ import { Block } from "@/map/block";
 import { bud } from "@/bud/bud";
 import { getPlaneAdjacent, getPlaneAdjacentBlocks } from "@/bud/utils";
 
-class Water {
+class Liquid {
     private static context = bud;
 
     static flow(data: BudData): void {
@@ -33,7 +33,7 @@ class Water {
     }
 
     static update(data: BudData): void {
-        Water.flow(data);
+        Liquid.flow(data);
     }
 }
 
@@ -41,8 +41,8 @@ class NormalUpdate implements BudUpdater {
     private static context = bud;
 
     handleBud(data: BudData): void {
-        Water.update(data);
+        Liquid.update(data);
     }
 }
 
-export default NormalUpdate;
+export { NormalUpdate, Liquid };
