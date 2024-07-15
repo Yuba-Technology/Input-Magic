@@ -1,5 +1,5 @@
 import { BudData, BudUpdater } from "@/data/bud/types";
-import { Block } from "@/data/map/block";
+import { EmptyBlock, LiquidBlock } from "@/data/map/block";
 import { bud } from "@/data/bud/bud";
 import { getPlaneAdjacent, getPlaneAdjacentBlocks } from "@/data/bud/utils";
 
@@ -7,22 +7,24 @@ class Liquid {
     private static context = bud;
 
     static flow(data: BudData): void {
+        const targetBlock = data.dimension.getBlock(data.pos);
+        if (!(targetBlock instanceof EmptyBlock)) return;
+
         const adjacentBlocks = getPlaneAdjacentBlocks(
             data.dimension,
             data.pos
         );
-
         const waterCount = adjacentBlocks.filter(
             (block) => block.type === "water"
         ).length;
 
         if (waterCount < 2) return;
 
-        data.dimension.setBlock(data.pos, new Block("water"));
+        data.dimension.setBlock(data.pos, new LiquidBlock("water"));
         const adjacentCoordinates = getPlaneAdjacent(data.pos);
         for (const pos of adjacentCoordinates) {
-            if (data.dimension.getBlock(pos)?.type !== "air") continue;
-
+            if (!(data.dimension.getBlock(pos) instanceof EmptyBlock))
+                continue;
             this.context.add({
                 type: 0,
                 pos,
