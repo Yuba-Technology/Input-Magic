@@ -1,4 +1,4 @@
-import { Block } from "@/data/map/block";
+import { Block, EmptyBlock, LiquidBlock } from "@/data/map/block";
 import { Chunk, ChunkPos } from "@/data/map/chunk";
 import { generate2DArray } from "@/data/map/utils";
 import { PerlinNoise } from "@/data/map/generator/noise";
@@ -48,11 +48,11 @@ class Generator3D {
             blocks.push(new Block("sand"));
 
             while (blocks.length <= seaLevel) {
-                blocks.push(new Block("water"));
+                blocks.push(new LiquidBlock("water"));
             }
 
             while (blocks.length < Chunk.HEIGHT) {
-                blocks.push(new Block("air"));
+                blocks.push(new EmptyBlock("air"));
             }
         }
 
@@ -65,7 +65,7 @@ class Generator3D {
             blocks.push(new Block("sand"));
 
             while (blocks.length < Chunk.HEIGHT) {
-                blocks.push(new Block("air"));
+                blocks.push(new EmptyBlock("air"));
             }
         }
 
@@ -87,7 +87,7 @@ class Generator3D {
                 blocks.push(new Block("grass"));
 
                 while (blocks.length < Chunk.HEIGHT) {
-                    blocks.push(new Block("air"));
+                    blocks.push(new EmptyBlock("air"));
                 }
             }
 
@@ -104,7 +104,7 @@ class Generator3D {
                 );
 
                 while (blocks.length < Chunk.HEIGHT) {
-                    blocks.push(new Block("air"));
+                    blocks.push(new EmptyBlock("air"));
                 }
             }
         }
