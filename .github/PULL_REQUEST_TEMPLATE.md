@@ -21,7 +21,7 @@
 <!-- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
 
 - [ ] I have read the [contributing guidelines](https://github.com/Yuba-Technology/Input-Magic/blob/main/.github/CONTRIBUTING.md)
-- [ ] My code follows the code style of the project _(using `npm run lint`)_
+- [ ] My code follows the code style of the project _(using `npm run format` and `npm run lint`)_
 - [ ] My change introduces changes to the documentation
 - [ ] I have updated the documentation accordingly
 - [ ] I have added tests to cover my changes
