@@ -163,4 +163,4 @@ cython_debug/
 
 # Venv environment files
 *.venv
-/ai-drive/
+ai-drive/**/*
