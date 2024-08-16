@@ -78,6 +78,6 @@
     },
     "dependencies": {
         "node-fetch": "^3.3.2",
-        "pixi.js": "^8.2.4"
+        "pixi.js": "^8.3.3"
     }
 }
